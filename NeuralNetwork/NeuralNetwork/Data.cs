@@ -111,5 +111,38 @@ namespace NeuralNetwork
                 list[k] = temp;
             }
         }
+
+        public static List<double[][]> LoadData(string folder)
+        {
+            List<double[][]> list = new List<double[][]>();
+            
+            DirectoryInfo diinfo = new DirectoryInfo(folder);
+            FileInfo[] Files = diinfo.GetFiles("*.txt");
+
+
+            foreach(FileInfo file in Files)
+            {
+                list.Add(LoadFile(file.Name));
+            }
+
+            return list;
+        }
+
+        private static double[][] LoadFile(string fileName) //from .txt file
+        {
+            string[] lines = File.ReadAllLines($"data\\{fileName}");
+            double[][] data = new double[lines.Length][];
+
+            for(int i = 0; i < lines.Length; i++)
+            {
+                string[] temp = lines[i].Split(';');
+                data[i] = new double[temp.Length];
+
+                for (int j = 0; j < temp.Length; j++)
+                    data[i][j] = Convert.ToDouble(temp[j]);
+            }
+
+            return data;
+        }
     }
 }
