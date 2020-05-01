@@ -2,6 +2,10 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
+using System.Windows.Markup;
+using System.Security.Cryptography;
+using System.Runtime.CompilerServices;
 
 namespace NeuralNetwork
 {
@@ -124,7 +128,7 @@ namespace NeuralNetwork
             {
                 list.Add(LoadFile(file.Name));
             }
-
+             
             return list;
         }
 
@@ -143,6 +147,69 @@ namespace NeuralNetwork
             }
 
             return data;
+        }
+
+        public static void BitmapToTxtFile(Bitmap bitmap)
+        {
+            double[][] values = new double[bitmap.Height][];
+            for (int i = 0; i < values.Length; i++)
+                values[i] = new double[bitmap.Width];
+
+            for(int i = 0; i < bitmap.Height; i++)
+                for(int j = 0; j < bitmap.Width; j++)
+                {
+                    values[i][j] = bitmap.GetPixel(j, i).GetBrightness();
+                    
+                }
+
+            using (var outf = new StreamWriter("test.txt"))
+                for (int i = 0; i < values.Length; i++)
+                {
+                    for (int j = 0; j < values[i].Length - 1; j++)
+                        outf.Write(values[i][j] + ";");
+                    
+                    outf.Write(values[i][values[i].Length - 1]);
+                    outf.WriteLine();
+                }
+        }
+
+        public static void LoadMINSTDataset(string imagesName, string labelsName, List<byte[][]> Images, List<byte> Labels)
+        {
+            BinaryReader brImages = new BinaryReader(new FileStream(imagesName, FileMode.Open));
+            BinaryReader brLabels = new BinaryReader(new FileStream(labelsName, FileMode.Open));
+
+            int magic1 = Extensions.ReadBigInt32(brImages);
+            int numImages = Extensions.ReadBigInt32(brImages);
+            int numRows = Extensions.ReadBigInt32(brImages);
+            int numCols = Extensions.ReadBigInt32(brImages);
+
+            int magic2 = Extensions.ReadBigInt32(brLabels);
+            int numLabels = Extensions.ReadBigInt32(brLabels);
+
+            for (int i = 0; i < numImages; i++)
+            {
+                byte[][] pixels = new byte[numRows][];
+                for (int j = 0; j < pixels.Length; j++)
+                    pixels[j] = new byte[numCols];
+
+                for (int j = 0; j < numRows; j++)
+                    for (int k = 0; k < numCols; k++)
+                        pixels[j][k] = brImages.ReadByte();
+
+                Images.Add(pixels);
+                Labels.Add(brLabels.ReadByte());
+            }
+        }
+    }
+
+    public static class Extensions
+    {
+        public static int ReadBigInt32(this BinaryReader br)
+        {
+            var bytes = br.ReadBytes(sizeof(Int32));
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+            return BitConverter.ToInt32(bytes, 0);
         }
     }
 }

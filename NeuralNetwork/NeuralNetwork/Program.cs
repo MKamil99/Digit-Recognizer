@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 
 namespace NeuralNetwork
 {
@@ -7,13 +9,15 @@ namespace NeuralNetwork
     {
         static void Main(string[] args)
         {
-            List<double[][]> data = Data.LoadData("data");
-            for (int i = 0; i < data.Count; i++)
-                for (int j = 0; j < data[i].Length; j++)
-                    for (int k = 0; k < data[i][j].Length; k++)
-                        Console.WriteLine(data[i][j][k]);
+            List<byte[][]> trainImages = new List<byte[][]>();
+            List<byte> trainLabels = new List<byte>();
 
-            Console.ReadKey();
+            List<byte[][]> testImages = new List<byte[][]>();
+            List<byte> testLabels = new List<byte>();
+
+            Data.LoadMINSTDataset("train-images.idx3-ubyte", "train-labels.idx1-ubyte", trainImages, trainLabels);
+            Data.LoadMINSTDataset("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", testImages, testLabels);
+
         }
     }
 }
