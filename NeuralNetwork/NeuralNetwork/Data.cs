@@ -96,5 +96,20 @@ namespace NeuralNetwork
 
             return new double[][][] { TrainingDataInput, TrainingDataOutput, TestingDataInput, TestingDataOutput };
         }
+
+        public static void Shuffle(List<double[][]> list)
+        {
+            Random rand = new Random();
+            int j = list.Count;
+
+            while(j > 1)
+            {
+                int k = rand.Next(j--);
+                var temp = list[j];
+
+                list[j] = list[k];
+                list[k] = temp;
+            }
+        }
     }
 }
