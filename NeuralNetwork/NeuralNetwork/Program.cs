@@ -18,6 +18,11 @@ namespace NeuralNetwork
             Data.LoadMINSTDataset("train-images.idx3-ubyte", "train-labels.idx1-ubyte", trainImages, trainLabels);
             Data.LoadMINSTDataset("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", testImages, testLabels);
 
+            Data.Shuffle(trainImages, trainLabels);
+            
+
+            Console.ReadKey();
+            
         }
     }
 }
