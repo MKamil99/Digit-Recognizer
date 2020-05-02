@@ -52,13 +52,14 @@ namespace NeuralNetwork
             Layers.Add(newlayer);
         }
 
-        public void PushInputValues(double[] inputs)
+        public void PushInputValues(double[][] inputs)
         {
             if (inputs.Length != Layers[0].Neurons.Count) 
                 throw new Exception("Incorrect Input Size");
 
-            for (int i = 0; i < inputs.Length; i++) 
-                Layers[0].Neurons[i].PushValueOnInput(inputs[i]);
+            for (int i = 0; i < inputs.Length; i++)
+                for(int j = 0; j < inputs[i].Length; j++)
+                    Layers[0].Neurons[i].PushValueOnInput(inputs[i][j]);
         }
 
         public void PushExpectedValues(double[][] expectedvalues) 

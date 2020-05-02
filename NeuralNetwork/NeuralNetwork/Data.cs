@@ -101,7 +101,7 @@ namespace NeuralNetwork
             return new double[][][] { TrainingDataInput, TrainingDataOutput, TestingDataInput, TestingDataOutput };
         }
 
-        public static void Shuffle(List<byte[][]> list1, List<byte> list2)
+        public static void Shuffle(List<double[][]> list1, List<double> list2)
         {
             Random rand = new Random();
             int j = list1.Count;
@@ -177,7 +177,7 @@ namespace NeuralNetwork
                 }
         }
 
-        public static void LoadMINSTDataset(string imagesName, string labelsName, List<byte[][]> Images, List<byte> Labels)
+        public static void LoadMINSTDataset(string imagesName, string labelsName, List<double[][]> Images, List<double> Labels)
         {
             BinaryReader brImages = new BinaryReader(new FileStream(imagesName, FileMode.Open));
             BinaryReader brLabels = new BinaryReader(new FileStream(labelsName, FileMode.Open));
@@ -192,9 +192,9 @@ namespace NeuralNetwork
 
             for (int i = 0; i < numImages; i++)
             {
-                byte[][] pixels = new byte[numRows][];
+                double[][] pixels = new double[numRows][];
                 for (int j = 0; j < pixels.Length; j++)
-                    pixels[j] = new byte[numCols];
+                    pixels[j] = new double[numCols];
 
                 for (int j = 0; j < numRows; j++)
                     for (int k = 0; k < numCols; k++)
