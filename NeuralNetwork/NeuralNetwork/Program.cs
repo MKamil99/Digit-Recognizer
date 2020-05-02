@@ -7,14 +7,18 @@ namespace NeuralNetwork
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) //60 000   i    10 000
         {
-            List<double[][]> trainImages = new List<double[][]>();
-            List<double> trainLabels = new List<double>();
+            double[][] trainImages = new double[60000][];
+            double[] trainLabels = new double[60000];
+            for (int i = 0; i < trainImages.Length; i++)
+                trainImages[i] = new double[28 * 28];
 
-            List<double[][]> testImages = new List<double[][]>();
-            List<double> testLabels = new List<double>();
-
+            double[][] testImages = new double[10000][];
+            double[] testLabels = new double[10000];
+            for (int i = 0; i < testImages.Length; i++)
+                testImages[i] = new double[28 * 28];
+            
             Console.WriteLine("Loading data...");
 
             Data.LoadMINSTDataset("train-images.idx3-ubyte", "train-labels.idx1-ubyte", trainImages, trainLabels);

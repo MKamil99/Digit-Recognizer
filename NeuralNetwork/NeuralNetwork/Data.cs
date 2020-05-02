@@ -101,22 +101,22 @@ namespace NeuralNetwork
             return new double[][][] { TrainingDataInput, TrainingDataOutput, TestingDataInput, TestingDataOutput };
         }
 
-        public static void Shuffle(List<double[][]> list1, List<double> list2)
+        public static void Shuffle(double[][] arr1, double[] arr2)
         {
             Random rand = new Random();
-            int j = list1.Count;
+            int j = arr1.Length;
 
             while(j > 1)
             {
                 int k = rand.Next(j--);
-                var temp1 = list1[j];
-                var temp2 = list2[j];
+                var temp1 = arr1[j];
+                var temp2 = arr2[j];
 
-                list1[j] = list1[k];
-                list1[k] = temp1;
+                arr1[j] = arr1[k];
+                arr1[k] = temp1;
 
-                list2[j] = list2[k];
-                list2[k] = temp2;
+                arr2[j] = arr2[k];
+                arr2[k] = temp2;
             }
         }
 
@@ -177,7 +177,7 @@ namespace NeuralNetwork
                 }
         }
 
-        public static void LoadMINSTDataset(string imagesName, string labelsName, List<double[][]> Images, List<double> Labels)
+        public static void LoadMINSTDataset(string imagesName, string labelsName, double[][] Images, double[] Labels)
         {
             BinaryReader brImages = new BinaryReader(new FileStream(imagesName, FileMode.Open));
             BinaryReader brLabels = new BinaryReader(new FileStream(labelsName, FileMode.Open));
@@ -192,16 +192,10 @@ namespace NeuralNetwork
 
             for (int i = 0; i < numImages; i++)
             {
-                double[][] pixels = new double[numRows][];
-                for (int j = 0; j < pixels.Length; j++)
-                    pixels[j] = new double[numCols];
+                for (int j = 0; j < numRows*numCols; j++)
+                    Images[i][j] = brImages.ReadByte();
 
-                for (int j = 0; j < numRows; j++)
-                    for (int k = 0; k < numCols; k++)
-                        pixels[j][k] = brImages.ReadByte();
-
-                Images.Add(pixels);
-                Labels.Add(brLabels.ReadByte());
+                Labels[i] = brLabels.ReadByte();
             }
         }
     }
