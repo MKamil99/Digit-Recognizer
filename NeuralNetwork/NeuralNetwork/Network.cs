@@ -6,14 +6,14 @@ namespace NeuralNetwork
 {
     class Network
     {
-        static double LearningRate = 0.01;
+        static double LearningRate = 0.1;
         internal List<Layer> Layers;
         internal double[][] ExpectedResult;
         double[][] differences;
 
         public Network(int inputneuronscount, int hiddenlayerscount, int hiddenneuronscount, int outputneuronscount, string path = null)
         {
-            Console.WriteLine("\n Building neural network...");
+            Console.WriteLine(" Building neural network...");
             if (inputneuronscount < 1 || hiddenlayerscount < 1 || hiddenneuronscount < 1 || outputneuronscount < 1)
                 throw new Exception("Incorrect Network Parameters");
 
@@ -79,30 +79,29 @@ namespace NeuralNetwork
             return output;
         }
 
-        public void Train(double[][] data, double epochscount)
+        public void Train(double[][][] datasets, double epochscount)
         {
-            double[][][] sets = Data.PrepareIrises(data);
-            double[][] inputs = sets[0], expectedoutputs = sets[1];
-            double[][] testinputs = sets[2], testoutputs = sets[3];
-            PushExpectedValues(expectedoutputs);
+            double[][] trainingInputs = datasets[0], trainingOutputs = datasets[1];
+            double[][] testingInputs = datasets[2], testingOutputs = datasets[3];
+            PushExpectedValues(trainingOutputs);
 
             Console.WriteLine(" Training neural network...");
-            double recenterror = double.MaxValue, minerror = double.MaxValue;
+            double recenterror = double.MaxValue, minerror = double.MaxValue;  // comment this, 99th and 101th lines to turn off informing about an error
             for (int i = 0; i < epochscount; i++)
             {
                 List<double> outputs = new List<double>();
-                for (int j = 0; j < inputs.Length; j++)
+                for (int j = 0; j < trainingInputs.Length; j++)
                 {
-                    PushInputValues(inputs[j]);
+                    PushInputValues(trainingInputs[j]);
                     outputs = GetOutput();
                     ChangeWeights(outputs, j);
                 }
-                recenterror = Test(testinputs, testoutputs);
-                if (minerror < recenterror) break;
+                recenterror = Test(testingInputs, testingOutputs);
+                //if (minerror < recenterror) break;                           // uncomment this line to turn on breaking the loop
                 minerror = recenterror;
             }
-            //Test(testinputs, testoutputs);
             SaveWeights(@"weights.txt");
+            Console.WriteLine(" Done!");
         }
 
         private double Test(double[][] inputs, double[][] expectedoutputs)
@@ -161,7 +160,7 @@ namespace NeuralNetwork
                         foreach (Synapse synapse in neuron.Inputs)
                             synapse.Weight = Double.Parse(lines[i++]);
             }
-            catch (Exception e) { Console.WriteLine(" Incorrect input file"); }
+            catch (Exception) { Console.WriteLine(" Incorrect input file"); }
 
         }
 
