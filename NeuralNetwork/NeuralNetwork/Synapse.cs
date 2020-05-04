@@ -7,7 +7,7 @@ namespace NeuralNetwork
         static Random tmp = new Random();
         internal Neuron FromNeuron, ToNeuron;
         public double Weight { get; set; }
-        public double OutputValue { get; set; }
+        public double PushedData { get; set; }
         static public int SynapsesCount { get; set; } = 0;
 
         public Synapse(Neuron fromneuron, Neuron toneuron) // standard synapse
@@ -17,16 +17,16 @@ namespace NeuralNetwork
             SynapsesCount += 1;
         }
 
-        public Synapse(Neuron toneuron, double output) // input synapse for first layer
+        public Synapse(Neuron toneuron, double output)     // input synapse for first layer
         {
-            ToNeuron = toneuron; OutputValue = output; 
+            ToNeuron = toneuron; PushedData = output; 
             Weight = 1;
             SynapsesCount += 1;
         }
 
         public double GetOutput()
         {
-            if (FromNeuron == null) return OutputValue; // if it is first layer
+            if (FromNeuron == null) return PushedData;     // if it is first layer
             return FromNeuron.OutputValue * Weight;
         }
     }

@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace NeuralNetwork
 {
     class Network
     {
-        static double LearningRate = 0.1;
+        static double LearningRate = 0.05;
         internal List<Layer> Layers;
-        internal double[][] ExpectedResult;
-        double[][] differences;
+        internal double[][] ExpectedResults;
+        double[][] ErrorFunctionChanges;
 
-        public Network(int inputneuronscount, int hiddenlayerscount, int hiddenneuronscount, int outputneuronscount, string path = null)
+        public Network(int inputneuronscount, int hiddenlayerscount, int hiddenneuronscount, int outputneuronscount)
         {
             Console.WriteLine(" Building neural network...");
-            if (inputneuronscount < 1 || hiddenlayerscount < 1 || hiddenneuronscount < 1 || outputneuronscount < 1)
+            if (inputneuronscount < 1 || hiddenlayerscount > 0 && hiddenneuronscount < 1 || outputneuronscount < 1)
                 throw new Exception("Incorrect Network Parameters");
 
             Layers = new List<Layer>();
@@ -23,18 +24,9 @@ namespace NeuralNetwork
                 AddNextLayer(new Layer(hiddenneuronscount));
             AddNextLayer(new Layer(outputneuronscount));
 
-            differences = new double[Layers.Count][];
+            ErrorFunctionChanges = new double[Layers.Count][];
             for (int i = 1; i < Layers.Count; i++) 
-                differences[i] = new double[Layers[i].Neurons.Count];
-
-            if (File.Exists(path))
-            {
-                Console.WriteLine(" Loading weights...");
-                string[] lines = File.ReadAllLines(path);
-                if (lines.Length != Synapse.SynapsesCount)
-                    Console.WriteLine(" Incorrect input file.");
-                else LoadWeights(lines);
-            }
+                ErrorFunctionChanges[i] = new double[Layers[i].Neurons.Count];
         }
 
         private void AddFirstLayer(int inputneuronscount)
@@ -66,7 +58,7 @@ namespace NeuralNetwork
             if (expectedvalues[0].Length != Layers[Layers.Count - 1].Neurons.Count) 
                 throw new Exception("Incorrect Expected Output Size");
 
-            ExpectedResult = expectedvalues;
+            ExpectedResults = expectedvalues;
         }
 
         public List<double> GetOutput()
@@ -79,14 +71,13 @@ namespace NeuralNetwork
             return output;
         }
 
-        public void Train(double[][][] datasets, double epochscount)
+        public void Train(double[][][] datasets, double epochscount, bool showinfo = false, bool breaking = false)
         {
             double[][] trainingInputs = datasets[0], trainingOutputs = datasets[1];
-            double[][] testingInputs = datasets[2], testingOutputs = datasets[3];
-            PushExpectedValues(trainingOutputs);
+            double recenterror = double.MaxValue, minerror = double.MaxValue;
 
+            PushExpectedValues(trainingOutputs);
             Console.WriteLine(" Training neural network...");
-            double recenterror = double.MaxValue, minerror = double.MaxValue;  // comment this, 99th and 101th lines to turn off informing about an error
             for (int i = 0; i < epochscount; i++)
             {
                 List<double> outputs = new List<double>();
@@ -96,15 +87,17 @@ namespace NeuralNetwork
                     outputs = GetOutput();
                     ChangeWeights(outputs, j);
                 }
-                recenterror = Test(testingInputs, testingOutputs);
-                //if (minerror < recenterror) break;                           // uncomment this line to turn on breaking the loop
+
+                recenterror = CalculateMeanSquareError(datasets[2], datasets[3], showinfo);
+                if (breaking == true && minerror < recenterror) break;
                 minerror = recenterror;
             }
-            SaveWeights(@"weights.txt");
+
+            SaveWeights("weights.txt");
             Console.WriteLine(" Done!");
         }
 
-        private double Test(double[][] inputs, double[][] expectedoutputs)
+        private double CalculateMeanSquareError(double[][] inputs, double[][] expectedoutputs, bool showerror = false)
         {
             double error = 0; 
             List<double> outputs = new List<double>();
@@ -115,63 +108,90 @@ namespace NeuralNetwork
                 error += Functions.CalculateError(outputs, i, expectedoutputs);
             }
             error /= inputs.Length;
-            Console.WriteLine($" Average mean square error: {Math.Round(error, 5)}");
+            if (showerror == true) Console.WriteLine($" Average mean square error: {Math.Round(error, 5)}");
             return error;
         }
 
-        private void CalculateDifferences(List<double> outputs, int row)
+        private void ChangeWeights(List<double> outputs, int row) // using Back-Propagation Algorithm
         {
-            for (int i = 0; i < Layers[Layers.Count - 1].Neurons.Count; i++)
-                differences[Layers.Count - 1][i] = (ExpectedResult[row][i] - outputs[i]) 
-                    * Functions.BipolarDifferential(Layers[Layers.Count - 1].Neurons[i].InputValue);
-            for (int k = Layers.Count - 2; k > 0; k--)
-                for (int i = 0; i < Layers[k].Neurons.Count; i++)
-                {
-                    differences[k][i] = 0;
-                    for (int j = 0; j < Layers[k + 1].Neurons.Count; j++)
-                        differences[k][i] += differences[k + 1][j] * Layers[k+1].Neurons[j].Inputs[i].Weight;
-                    differences[k][i] *= Functions.BipolarDifferential(Layers[k].Neurons[i].InputValue);
-                }
-        }
-
-        private void ChangeWeights(List<double> outputs, int row)
-        {
-            CalculateDifferences(outputs, row);
+            CalculateErrorFunctionChanges(outputs, row);
             for (int k = Layers.Count - 1; k > 0; k--)
                 for (int i = 0; i < Layers[k].Neurons.Count; i++)
                     for (int j = 0; j < Layers[k - 1].Neurons.Count; j++)
                         Layers[k].Neurons[i].Inputs[j].Weight += 
-                            LearningRate * 2 * differences[k][i] * Layers[k - 1].Neurons[j].OutputValue;
+                            LearningRate * 2 * ErrorFunctionChanges[k][i] * Layers[k - 1].Neurons[j].OutputValue;
+        }
+
+        private void CalculateErrorFunctionChanges(List<double> outputs, int row)
+        {
+            for (int i = 0; i < Layers[Layers.Count - 1].Neurons.Count; i++)
+                ErrorFunctionChanges[Layers.Count - 1][i] = (ExpectedResults[row][i] - outputs[i])
+                    * Functions.BipolarDifferential(Layers[Layers.Count - 1].Neurons[i].InputValue);
+            for (int k = Layers.Count - 2; k > 0; k--)
+                for (int i = 0; i < Layers[k].Neurons.Count; i++)
+                {
+                    ErrorFunctionChanges[k][i] = 0;
+                    for (int j = 0; j < Layers[k + 1].Neurons.Count; j++)
+                        ErrorFunctionChanges[k][i] += ErrorFunctionChanges[k + 1][j] * Layers[k + 1].Neurons[j].Inputs[i].Weight;
+                    ErrorFunctionChanges[k][i] *= Functions.BipolarDifferential(Layers[k].Neurons[i].InputValue);
+                }
         }
 
         private void SaveWeights(string path)
-        {
-            List<string> tmp = ReadWeights();
-            File.WriteAllLines(path, tmp);
-        }
-
-        private void LoadWeights(string[] lines)
-        {
-            try
-            {
-                int i = 0;
-                foreach (Layer layer in Layers)
-                    foreach (Neuron neuron in layer.Neurons)
-                        foreach (Synapse synapse in neuron.Inputs)
-                            synapse.Weight = Double.Parse(lines[i++]);
-            }
-            catch (Exception) { Console.WriteLine(" Incorrect input file"); }
-
-        }
-
-        private List<string> ReadWeights()
         {
             List<string> tmp = new List<string>();
             foreach (Layer layer in Layers)
                 foreach (Neuron neuron in layer.Neurons)
                     foreach (Synapse synapse in neuron.Inputs)
                         tmp.Add(synapse.Weight.ToString());
-            return tmp;
+            File.WriteAllLines(path, tmp);
+        }
+
+        public void LoadWeights(string path)
+        {
+            if (File.Exists(path))
+            {
+                Console.WriteLine(" Loading weights...");
+                string[] lines = File.ReadAllLines(path);
+                if (lines.Length != Synapse.SynapsesCount)
+                    Console.WriteLine(" Incorrect input file.");
+                else
+                {
+                    try
+                    {
+                        int i = 0;
+                        foreach (Layer layer in Layers)
+                            foreach (Neuron neuron in layer.Neurons)
+                                foreach (Synapse synapse in neuron.Inputs)
+                                    synapse.Weight = Double.Parse(lines[i++]);
+                    }
+                    catch (Exception) { Console.WriteLine(" Incorrect input file."); }
+                }
+            }
+            else Console.WriteLine(" File doesn't exist.");
+        }
+
+        public void CalculatePrecision(double[][][] datasets, bool shownumbers = false) // using Testing Dataset
+        {
+            double[][] testingInputs = datasets[2], testingOutputs = datasets[3];
+            List<double> outputs; int correct = 0;
+            for (int i = 0; i < testingInputs.Length; i++)
+            {
+                PushInputValues(testingInputs[i]);
+                outputs = GetOutput();
+                if (shownumbers == true) Classify(testingOutputs[i], outputs);
+                if (outputs.IndexOf(outputs.Max()) == testingOutputs[i].ToList().IndexOf(1)) correct += 1;
+            }
+            Console.WriteLine($" Precision: {(Math.Round((double)correct / testingInputs.Length, 4) * 100).ToString()}%");
+        }
+
+        private static void Classify(double[] testingOutputs, List<double> trueOutputs)
+        {
+             Console.Write("\n Should be: ");
+            for (int i = 0; i < testingOutputs.Length; i++) Console.Write(string.Format("{0, 4}", testingOutputs[i].ToString("0.0")) + " ");
+            Console.Write("\n Got:       ");
+            for (int i = 0; i < trueOutputs.Count; i++) Console.Write(string.Format("{0, 4}", trueOutputs[i].ToString("0.0")) + " ");
+            Console.WriteLine("\n");
         }
     }
 }

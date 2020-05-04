@@ -1,45 +1,33 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
 
 namespace NeuralNetwork
 {
     class Data
     {
-        public static void CheckPrecision(double[][][] datasets, Network network)
+        public static double[][][] PrepareDatasets()
         {
-            List<double> outputs; int correct = 0;
-            for (int i = 0; i < datasets[0].Length; i++)
-            {
-                network.PushInputValues(datasets[0][i]);
-                outputs = network.GetOutput();
-                //ClassifyDigit(datasets, outputs, i);
-                if (outputs.IndexOf(outputs.Max()) == datasets[1][i].ToList().IndexOf(1)) correct += 1;
-            }
-            for (int i = 0; i < datasets[2].Length; i++)
-            {
-                network.PushInputValues(datasets[2][i]);
-                outputs = network.GetOutput();
-                //ClassifyDigit(datasets, outputs, i);
-                if (outputs.IndexOf(outputs.Max()) == datasets[3][i].ToList().IndexOf(1)) correct += 1;
-            }
-            Console.WriteLine($"\n Correct ones: {correct}/{datasets[0].Length + datasets[2].Length}");
-            Console.WriteLine($" Precision: {(Math.Round((double)correct / (datasets[0].Length + datasets[2].Length), 4) * 100).ToString()}%\n");
-        }
+            double[][] trainImages = new double[6000][]; // MINST contains 60000, but we don't need so many digits
+            double[][] trainLabels = new double[6000][];
+            for (int i = 0; i < trainImages.Length; i++)
+                trainImages[i] = new double[28 * 28];
+            for (int i = 0; i < trainLabels.Length; i++)
+                trainLabels[i] = new double[10];
 
-        private static void ClassifyDigit(double[][][] datasets, List<double> outputs, int row)
-        {
-            if (row % 10 == 0)
-            {
-                List<double> expectedoutputs = datasets[1][row].ToList();
-                Console.Write(" Should be: ");
-                for (int j = 0; j < expectedoutputs.Count; j++) Console.Write(string.Format("{0, 4}", expectedoutputs[j].ToString("0.0")) + " ");
-                Console.Write("\n Got:       ");
-                for (int j = 0; j < outputs.Count; j++) Console.Write(string.Format("{0, 4}", outputs[j].ToString("0.0")) + " ");
-                Console.WriteLine();
-            }
+            double[][] testImages = new double[1000][];   // and 10000 here...
+            double[][] testLabels = new double[1000][];
+            for (int i = 0; i < testImages.Length; i++)
+                testImages[i] = new double[28 * 28];
+            for (int i = 0; i < testLabels.Length; i++)
+                testLabels[i] = new double[10];
+
+            Console.WriteLine(" Loading data...");
+            LoadMINSTDataset("train-images.idx3-ubyte", "train-labels.idx1-ubyte", trainImages, trainLabels);
+            LoadMINSTDataset("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", testImages, testLabels);
+
+            return new double[][][] { trainImages, trainLabels, testImages, testLabels };
         }
 
         public static void Shuffle(double[][] arr1, double[][] arr2)
@@ -131,7 +119,7 @@ namespace NeuralNetwork
             int magic2 = Extensions.ReadBigInt32(brLabels);
             int numLabels = Extensions.ReadBigInt32(brLabels);
 
-            for (int i = 0; i < 1000; i++) // warunek stopu do zmiany na wcześniejszy; ten tylko do testów
+            for (int i = 0; i < numImages / 10; i++)
             {
                 for (int j = 0; j < numRows * numCols; j++)
                     Images[i][j] = Convert.ToDouble(brImages.ReadByte());

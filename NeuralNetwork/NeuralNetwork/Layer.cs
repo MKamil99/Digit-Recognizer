@@ -6,11 +6,6 @@ namespace NeuralNetwork
     {
         public List<Neuron> Neurons;
 
-        public Layer() 
-        { 
-            Neurons = new List<Neuron>(); 
-        }
-
         public Layer(int numberofneurons)
         {
             Neurons = new List<Neuron>();
