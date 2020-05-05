@@ -9,15 +9,15 @@ namespace NeuralNetwork
     {
         public static double[][][] PrepareDatasets()
         {
-            double[][] trainImages = new double[6000][]; // MINST contains 60000, but we don't need so many digits
-            double[][] trainLabels = new double[6000][];
+            double[][] trainImages = new double[600][]; // MINST contains 60000, but we don't need so many digits
+            double[][] trainLabels = new double[600][];
             for (int i = 0; i < trainImages.Length; i++)
                 trainImages[i] = new double[28 * 28];
             for (int i = 0; i < trainLabels.Length; i++)
                 trainLabels[i] = new double[10];
 
-            double[][] testImages = new double[1000][];   // and 10000 here...
-            double[][] testLabels = new double[1000][];
+            double[][] testImages = new double[100][];   // and 10000 here...
+            double[][] testLabels = new double[100][];
             for (int i = 0; i < testImages.Length; i++)
                 testImages[i] = new double[28 * 28];
             for (int i = 0; i < testLabels.Length; i++)
@@ -119,7 +119,7 @@ namespace NeuralNetwork
             int magic2 = Extensions.ReadBigInt32(brLabels);
             int numLabels = Extensions.ReadBigInt32(brLabels);
 
-            for (int i = 0; i < numImages / 10; i++)
+            for (int i = 0; i < numImages / 100; i++)
             {
                 for (int j = 0; j < numRows * numCols; j++)
                     Images[i][j] = Convert.ToDouble(brImages.ReadByte());

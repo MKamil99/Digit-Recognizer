@@ -13,9 +13,9 @@ namespace NeuralNetwork
             // datasets[3] - Testing Set's Expected Output
 
             Network network = new Network(datasets[0][0].Length, 2, 100, datasets[1][0].Length);
-            //network.LoadWeights("weights.txt");
+            network.LoadWeights("weights.txt");
             network.CalculatePrecision(datasets);
-            network.Train(datasets, 10, true);
+            network.Train(datasets, 1, true);
             network.CalculatePrecision(datasets);
 
             Console.ReadKey();

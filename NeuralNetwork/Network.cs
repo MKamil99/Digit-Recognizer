@@ -140,8 +140,8 @@ namespace NeuralNetwork
         private void SaveWeights(string path)
         {
             List<string> tmp = new List<string>();
-            foreach (Layer layer in Layers)
-                foreach (Neuron neuron in layer.Neurons)
+            for (int i = 1; i < Layers.Count; i++)
+                foreach (Neuron neuron in Layers[i].Neurons)
                     foreach (Synapse synapse in neuron.Inputs)
                         tmp.Add(synapse.Weight.ToString());
             File.WriteAllLines(path, tmp);
@@ -160,8 +160,8 @@ namespace NeuralNetwork
                     try
                     {
                         int i = 0;
-                        foreach (Layer layer in Layers)
-                            foreach (Neuron neuron in layer.Neurons)
+                        for (int j = 1; j < Layers.Count; j++)
+                            foreach (Neuron neuron in Layers[j].Neurons)
                                 foreach (Synapse synapse in neuron.Inputs)
                                     synapse.Weight = Double.Parse(lines[i++]);
                     }
