@@ -182,7 +182,8 @@ namespace NeuralNetwork
                 if (shownumbers == true) Classify(testingOutputs[i], outputs);
                 if (outputs.IndexOf(outputs.Max()) == testingOutputs[i].ToList().IndexOf(1)) correct += 1;
             }
-            Console.WriteLine($" Precision: {(Math.Round((double)correct / testingInputs.Length, 4) * 100).ToString()}%");
+            double precision = Math.Round((double)correct / testingInputs.Length, 4) * 100;
+            Console.WriteLine($" Precision: {precision.ToString()}%");
         }
 
         private static void Classify(double[] testingOutputs, List<double> trueOutputs)
