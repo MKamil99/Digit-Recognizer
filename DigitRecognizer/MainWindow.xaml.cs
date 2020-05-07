@@ -7,7 +7,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using NeuralNetwork;
-using System.Linq;
 using System.Diagnostics;
 
 namespace DigitRecognizer
@@ -94,20 +93,9 @@ namespace DigitRecognizer
                 Debug.WriteLine("");
             }
 
-
-
             List<double[]> digits = Data.RemoveSecondDimensions(DigitsInTwoDimensions); // Przygotowanie pod karmienie sieci 
-                                                                                                       
-            string tmp = "";
-            foreach (double[] digit in digits)
-            {
-                network.PushInputValues(digit);
-                var output = network.GetOutput();
-                //for (int i = 0; i < output.Count; i++)
-                //    Debug.WriteLine(output[i] + " ");
-                //Debug.WriteLine("");
-                tmp += output.IndexOf(output.Max()) + " ";
-            }
+
+            string tmp = DigitDetection.RecognizeDigits(digits, network);
             if (tmp != "") MathTextBox.Text = tmp;
         }
         #endregion

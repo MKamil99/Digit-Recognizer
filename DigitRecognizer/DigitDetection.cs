@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Diagnostics;
 using NeuralNetwork;
 
 namespace DigitRecognizer
@@ -157,6 +159,27 @@ namespace DigitRecognizer
         {
             Bitmap btm = new Bitmap(picture);
             return IntervalsCounting(ColumnSearch(btm), btm);  // Analiza działania, wycięcie i zapis
+        }
+
+        public static string RecognizeDigits(List<double[]> digits, Network network)
+        {
+            string tmp = "";
+            foreach (double[] digit in digits)
+            {
+                network.PushInputValues(digit);
+                var output = network.GetOutput();
+
+                for (int i = 0; i < output.Count; i++)
+                    Debug.WriteLine(output[i] + " ");
+                Debug.WriteLine("");
+
+                double max = output.Max();
+                if (max < 0.6) return $"NIE POTRAFIĘ ROZPOZNAĆ ZNAKU NA {digits.IndexOf(digit) + 1}. MIEJSCU";
+                int count = 0; foreach (double i in output) if (i > 0.6) count++;
+                if (count > 1) return $"NIE POTRAFIĘ ROZPOZNAĆ ZNAKU NA {digits.IndexOf(digit) + 1}. MIEJSCU";
+                else tmp += output.IndexOf(max);
+            }
+            return tmp;
         }
     }
 }
