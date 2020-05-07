@@ -10,7 +10,7 @@ namespace DigitRecognizer
     class DigitDetection
     {
         // Przeszukuje kolumny w celu znalezienia punktów innych niż białe:
-        static List<int> ColumnSearch(Bitmap btm)
+        private static List<int> ColumnSearch(Bitmap btm)
         {
             List<int> Cols = new List<int>();
             Color color;
@@ -29,10 +29,10 @@ namespace DigitRecognizer
         }
 
         // Oblicza przerwy miedzy kolumnami, które są tylko białe - pomiędzy nimi znajdują się cyfry/znaki, je będziemy wycinać:
-        static void IntervalsCounting(List<int> columnsWithBlackPoints, Bitmap btm)
+        private static List<double[][]> IntervalsCounting(List<int> columnsWithBlackPoints, Bitmap btm)
         {
             if (columnsWithBlackPoints.Count == 0)
-                return;
+                return new List<double[][]>();
 
             List<int> Start = new List<int>();
             List<int> Stop = new List<int>();
@@ -44,14 +44,15 @@ namespace DigitRecognizer
                     Stop.Add(columnsWithBlackPoints[i]);
                 }
             Stop.Add(columnsWithBlackPoints[columnsWithBlackPoints.Count - 1]);
-            ImageCropping(Start, Stop, btm);
+            return ImageCropping(Start, Stop, btm);
         }
 
         // Dla obliczoncyh przedziałów wycinamy obrazy i wywołujemy funkcję skalującą wycięte obrazy:
-        static void ImageCropping(List<int> Start, List<int> Stop, Bitmap btm)
+        private static List<double[][]> ImageCropping(List<int> Start, List<int> Stop, Bitmap btm)
         {
             int width;
             Bitmap bmpImage = new Bitmap(btm);
+            List<double[][]> digits = new List<double[][]>();
 
             for (int i = 0; i < Start.Count; i++)
             {
@@ -59,13 +60,14 @@ namespace DigitRecognizer
                 if (width != 0)
                 {
                     Bitmap bmpCrop = bmpImage.Clone(new Rectangle(Start[i], 0, width, btm.Height), bmpImage.PixelFormat);
-                    ResizeImage(bmpCrop, i);
-                }  
+                    digits.Add(ResizeImage(bmpCrop, i));
+                } 
             }
+            return digits;
         }
         
-        // Funckja zmieniająca rozdzielczość na 28x28 i zapisująca do folderu /output/ wycięte obrazy:
-        public static void ResizeImage(Image image, int i)
+        // Funkcja zmieniająca rozdzielczość na 28x28 i zwracająca bitmapę w postaci tablicy dwuwymiarowej:
+        private static double[][] ResizeImage(Image image, int i)
         {
             int width = 28, height = 28;
             Rectangle croppSize = new Rectangle(0, 0, width, height);
@@ -86,26 +88,14 @@ namespace DigitRecognizer
                     graphics.DrawImage(image, croppSize, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
                 }
             }
-            Data.BitmapToTxtFile(resizedImage, $"data//cropp{i}.txt");
-        }
-
-        // Czyści folder output z poprzednich wycięć:
-        static void ClearOutput()
-        {
-            DirectoryInfo di = new DirectoryInfo("data//");
-
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
+            return Data.BitmapToArray(resizedImage);
         }
 
         // Główna funckja wywołująca sekwencję:
-        public static void DetectDigits(string path)
+        public static List<double[][]> DetectDigits(MemoryStream picture)
         {
-            Bitmap btm = new Bitmap(path);
-            ClearOutput();                              // Czyszczenie poprzednich wycięć
-            IntervalsCounting(ColumnSearch(btm), btm);  // Analiza działania, wycięcie i zapis
+            Bitmap btm = new Bitmap(picture);
+            return IntervalsCounting(ColumnSearch(btm), btm);  // Analiza działania, wycięcie i zapis
         }
     }
 }

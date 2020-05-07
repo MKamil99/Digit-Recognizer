@@ -4,7 +4,7 @@ namespace NeuralNetwork
 {
     class Synapse
     {
-        static Random tmp = new Random();
+        static readonly Random tmp = new Random();
         internal Neuron FromNeuron, ToNeuron;
         public double Weight { get; set; }
         public double PushedData { get; set; }

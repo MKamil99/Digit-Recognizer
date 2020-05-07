@@ -7,8 +7,8 @@ namespace NeuralNetwork
 {
     class Network
     {
-        static double LearningRate = 0.05;
-        double SynapsesCount;
+        static readonly double LearningRate = 0.05;
+        double SynapsesCount = 0;
         internal List<Layer> Layers;
         internal double[][] ExpectedResults;
         double[][] ErrorFunctionChanges;

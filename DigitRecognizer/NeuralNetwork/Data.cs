@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Diagnostics;
 
 namespace NeuralNetwork
 {
@@ -84,15 +83,7 @@ namespace NeuralNetwork
 
         public static void BitmapToTxtFile(Bitmap bitmap, string path)
         {
-            double[][] values = new double[bitmap.Height][];
-            for (int i = 0; i < values.Length; i++)
-                values[i] = new double[bitmap.Width];
-
-            for(int i = 0; i < bitmap.Height; i++)
-                for(int j = 0; j < bitmap.Width; j++)
-                {
-                    values[i][j] = 255 - (bitmap.GetPixel(j, i).R + bitmap.GetPixel(j, i).G + bitmap.GetPixel(j, i).B) / 3;
-                }
+            double[][] values = BitmapToArray(bitmap);
 
             using (var outf = new StreamWriter(path))
                 for (int i = 0; i < values.Length; i++)
@@ -105,19 +96,31 @@ namespace NeuralNetwork
                 }
         }
 
+        public static double[][] BitmapToArray(Bitmap bitmap)
+        {
+            double[][] values = new double[bitmap.Height][];
+            for (int i = 0; i < values.Length; i++)
+                values[i] = new double[bitmap.Width];
+
+            for (int i = 0; i < bitmap.Height; i++)
+                for (int j = 0; j < bitmap.Width; j++)
+                    values[i][j] = 255 - (bitmap.GetPixel(j, i).R + bitmap.GetPixel(j, i).G + bitmap.GetPixel(j, i).B) / 3;
+
+            return values;
+        }
+
         public static void LoadMINSTDataset(string imagesName, string labelsName, double[][] Images, double[][] Labels)
         {
-            if (!File.Exists(imagesName) || !File.Exists(labelsName)) Debug.WriteLine("Plik nie istnieje.");
             BinaryReader brImages = new BinaryReader(new FileStream(imagesName, FileMode.Open));
             BinaryReader brLabels = new BinaryReader(new FileStream(labelsName, FileMode.Open));
 
-            int magic1 = Extensions.ReadBigInt32(brImages);
+            Extensions.ReadBigInt32(brImages);                  // magic1
             int numImages = Extensions.ReadBigInt32(brImages);
             int numRows = Extensions.ReadBigInt32(brImages);
             int numCols = Extensions.ReadBigInt32(brImages);
 
-            int magic2 = Extensions.ReadBigInt32(brLabels);
-            int numLabels = Extensions.ReadBigInt32(brLabels);
+            Extensions.ReadBigInt32(brLabels);                  // magic2
+            Extensions.ReadBigInt32(brLabels);                  // numLabels
 
             for (int i = 0; i < numImages / 10; i++)
             {

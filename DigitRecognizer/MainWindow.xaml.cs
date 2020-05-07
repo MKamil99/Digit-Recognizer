@@ -16,7 +16,6 @@ namespace DigitRecognizer
     {
         Point CurrentPoint = new Point();
         Network network;
-        int number = 0;
 
         public MainWindow()
         {
@@ -34,13 +33,15 @@ namespace DigitRecognizer
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                Line line = new Line();
-                line.StrokeThickness = 5;
-                line.Stroke = SystemColors.WindowTextBrush;
-                line.X1 = CurrentPoint.X;
-                line.Y1 = CurrentPoint.Y;
-                line.X2 = e.GetPosition(this).X;
-                line.Y2 = e.GetPosition(this).Y;
+                Line line = new Line
+                {
+                    StrokeThickness = 5,
+                    Stroke = SystemColors.WindowTextBrush,
+                    X1 = CurrentPoint.X,
+                    Y1 = CurrentPoint.Y,
+                    X2 = e.GetPosition(this).X,
+                    Y2 = e.GetPosition(this).Y
+                };
 
                 CurrentPoint = e.GetPosition(this);
                 PaintSurface.Children.Add(line);
@@ -49,7 +50,7 @@ namespace DigitRecognizer
         #endregion
 
         #region Przyciski
-        private void PrepareNetworkButtonClick(object sender, RoutedEventArgs e)
+        private void LaunchNetworkButtonClick(object sender, RoutedEventArgs e)
         {
             double[][][] datasets = Data.PrepareDatasets();
             // datasets[0] - dane wejściowe zbioru treningowego
@@ -62,7 +63,7 @@ namespace DigitRecognizer
             if (tmp == "SIEĆ JEST GOTOWA. ")
             {
                 MathTextBox.Text = tmp + network.CalculatePrecision(datasets);
-                PrepareButton.IsEnabled = false;
+                LaunchButton.IsEnabled = false;
                 CalculateButton.IsEnabled = true;
                 ClearButton.IsEnabled = true;
             }
@@ -77,12 +78,26 @@ namespace DigitRecognizer
 
         private void CalculateButtonClick(object sender, RoutedEventArgs e)
         {
-            MathTextBox.Text = "Trwa analiza działania...";
-            string path = $"paint{number++}.jpeg";
-            SaveCanvas(PaintSurface, path); // Zapisuje canvas jako plik i potem z niego korzysta, usuwa go przy zamykaniu programu
-            DigitDetection.DetectDigits(path);  // Wywołanie kolejnych funckji do wycinania i obróbki wczytanych cyfr, znaków
+            var picture = SaveCanvas(PaintSurface);                                     // Zapisuje canvas w pamięci
+            var DigitsInTwoDimensions = DigitDetection.DetectDigits(picture);           // Wywołanie kolejnych funckji do wycinania i obróbki wczytanych cyfr, znaków
 
-            List<double[]> digits = Data.RemoveSecondDimensions(Data.LoadData("data//"));
+
+            // DO DEBUGOWANIA - SPRAWDZENIA CZY RESIZING SIĘ ZGADZA ITP.:
+            for (int i = 0; i < DigitsInTwoDimensions.Count; i++) // dla każdej cyfry
+            {
+                for (int j = 0; j < DigitsInTwoDimensions[i].Length; j++) // wiersz
+                {
+                    for (int k = 0; k < DigitsInTwoDimensions[i][j].Length; k++) // kolumna
+                        Debug.Write(DigitsInTwoDimensions[i][j][k] + " ");
+                    Debug.WriteLine("");
+                }
+                Debug.WriteLine("");
+            }
+
+
+
+            List<double[]> digits = Data.RemoveSecondDimensions(DigitsInTwoDimensions); // Przygotowanie pod karmienie sieci 
+                                                                                                       
             string tmp = "";
             foreach (double[] digit in digits)
             {
@@ -93,12 +108,12 @@ namespace DigitRecognizer
                 //Debug.WriteLine("");
                 tmp += output.IndexOf(output.Max()) + " ";
             }
-            MathTextBox.Text = tmp;
+            if (tmp != "") MathTextBox.Text = tmp;
         }
         #endregion
 
-        // Zapis Canvas do pliku:
-        private void SaveCanvas(Canvas canvas, string filename)
+        // Zapis Canvas:
+        private MemoryStream SaveCanvas(Canvas canvas)
         {
             RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)canvas.Width, (int)canvas.Height, 96d, 96d, PixelFormats.Pbgra32);
             
@@ -107,10 +122,11 @@ namespace DigitRecognizer
             renderBitmap.Render(canvas);
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-            using (FileStream file = File.Create(filename))
-            {
-                encoder.Save(file);
-            }
+
+            MemoryStream stream = new MemoryStream();
+            encoder.Save(stream);
+
+            return stream;
         }
     }
 }
