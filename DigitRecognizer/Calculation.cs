@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MiniPaintForNumbers
+namespace DigitRecognizer
 {
     class Calculation //Aby obliczyć RPN: string result = toRPN(dzialanie); Stack<string> temp = ConvertToStack(result); double wynik = evalRPN(temp);
     {
