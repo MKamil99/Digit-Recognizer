@@ -58,6 +58,7 @@ namespace DigitRecognizer
             // datasets[3] - oczekiwane dane wyjściowe zbioru walidacyjnego
 
             network = new Network(datasets[0][0].Length, 2, 100, datasets[1][0].Length);
+            network.Train(datasets, 100, true);
             string tmp = network.LoadWeights("weights.txt");
             if (tmp == "SIEĆ JEST GOTOWA. ")
             {
@@ -97,20 +98,14 @@ namespace DigitRecognizer
 
             string tmp = DigitDetection.RecognizeDigits(digits, network);
             if (tmp != "") MathTextBox.Text = tmp;
-            if (!tmp.Contains("NIE"))
-            {
-                string result = Calculation.Calculate(tmp).ToString();
-                if (result == "BŁĘDNY ZAPIS!") MathTextBox.Text = result;
-                else MathTextBox.Text += result;
-            }
         }
         #endregion
 
         // Zapis Canvas:
-        private MemoryStream SaveCanvas(Canvas canvas)
+        public MemoryStream SaveCanvas(Canvas canvas)
         {
             RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)canvas.Width, (int)canvas.Height, 96d, 96d, PixelFormats.Pbgra32);
-            
+
             canvas.Measure(new Size((int)canvas.Width, (int)canvas.Height));
             canvas.Arrange(new Rect(new Size((int)canvas.Width, (int)canvas.Height)));
             renderBitmap.Render(canvas);

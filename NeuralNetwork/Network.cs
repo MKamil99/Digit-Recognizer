@@ -186,13 +186,14 @@ namespace NeuralNetwork
             Console.WriteLine($" Precision: {precision.ToString()}%");
         }
 
-        private static void Classify(double[] testingOutputs, List<double> trueOutputs)
+        public void Classify(double[] testingOutputs, List<double> trueOutputs)
         {
-             Console.Write("\n Should be: ");
+            string[] signs = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-", "*", ":" };
+            Console.Write("\n Should be: ");
             for (int i = 0; i < testingOutputs.Length; i++) Console.Write(string.Format("{0, 4}", testingOutputs[i].ToString("0.0")) + " ");
-            Console.Write("\n Got:       ");
+            Console.Write($"-> {signs[testingOutputs.ToList().IndexOf(testingOutputs.Max())]}\n Got:       ");
             for (int i = 0; i < trueOutputs.Count; i++) Console.Write(string.Format("{0, 4}", trueOutputs[i].ToString("0.0")) + " ");
-            Console.WriteLine("\n");
+            Console.WriteLine($"-> {signs[trueOutputs.ToList().IndexOf(trueOutputs.Max())]}\n");
         }
     }
 }

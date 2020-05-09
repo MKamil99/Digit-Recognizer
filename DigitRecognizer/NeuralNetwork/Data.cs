@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
+using DigitRecognizer;
 
 namespace NeuralNetwork
 {
@@ -9,24 +10,50 @@ namespace NeuralNetwork
     {
         public static double[][][] PrepareDatasets()
         {
-            double[][] trainImages = new double[6000][]; // MINST zawiera 60000 elementów, ale nie potrzebujemy tylu cyfr
-            double[][] trainLabels = new double[6000][];
+            double[][] trainImages = new double[6540][];
+            double[][] trainLabels = new double[6540][];
             for (int i = 0; i < trainImages.Length; i++)
                 trainImages[i] = new double[28 * 28];
             for (int i = 0; i < trainLabels.Length; i++)
-                trainLabels[i] = new double[10];
+                trainLabels[i] = new double[14];
 
-            double[][] testImages = new double[1000][];   // i 10000 tutaj...
-            double[][] testLabels = new double[1000][];
+            double[][] testImages = new double[1060][];
+            double[][] testLabels = new double[1060][];
             for (int i = 0; i < testImages.Length; i++)
                 testImages[i] = new double[28 * 28];
             for (int i = 0; i < testLabels.Length; i++)
-                testLabels[i] = new double[10];
+                testLabels[i] = new double[14];
 
+            Console.WriteLine(" Loading data...");
             LoadMINSTDataset("train-images.idx3-ubyte", "train-labels.idx1-ubyte", trainImages, trainLabels);
             LoadMINSTDataset("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", testImages, testLabels);
+            LoadOperationsDataset(trainImages, trainLabels, testImages, testLabels);
+            Shuffle(trainImages, trainLabels);
 
             return new double[][][] { trainImages, trainLabels, testImages, testLabels };
+        }
+
+        public static void LoadOperationsDataset(double[][] trainImages, double[][] trainLabels, double[][] testImages, double[][] testLabels)
+        {
+            int trainImageIndex = 6000, trainLabelsIndex = 6000, testImageIndex = 1000, testLabelsIndex = 1000;
+            int tempIndex = 0;
+            string[] filePaths = Directory.GetFiles(@"data\", "*.png");
+            List<double[]> digits;
+
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                digits = RemoveSecondDimensions(DigitDetection.DetectDigits(new Bitmap(filePaths[i])));
+                for (int j = 0; j < digits.Count - 20; j++)
+                {
+                    trainImages[trainImageIndex++] = digits[j];
+                    trainLabels[trainLabelsIndex++][(tempIndex++ % 4) + 10] = 1;
+                }
+                for (int j = digits.Count - 20; j < digits.Count; j++) // ostatnie 20 znaków (czyli 10%, bo mamy pliki po 200 znaków) idzie do testowego
+                {
+                    testImages[testImageIndex++] = digits[j];
+                    testLabels[testLabelsIndex++][(tempIndex++ % 4) + 10] = 1;
+                }
+            }
         }
 
         public static void Shuffle(double[][] arr1, double[][] arr2)

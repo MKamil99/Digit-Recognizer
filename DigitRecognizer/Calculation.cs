@@ -5,18 +5,26 @@ namespace DigitRecognizer
 {
     class Calculation //Aby obliczyć RPN: string result = toRPN(dzialanie); Stack<string> temp = ConvertToStack(result); double wynik = evalRPN(temp);
     {
+        public static string Calculate(string equation)
+        {
+            if (equation.EndsWith(" - ") || equation.EndsWith(" + ") || equation.EndsWith(" * ") || equation.EndsWith(" / "))
+                return "BŁĘDNY ZAPIS!";
+            string result = toRPN(equation); 
+            Stack<string> temp = ConvertToStack(result); 
+            return " = " + evalRPN(temp).ToString();
+        }
+
         public static string toRPN(string token) //metoda zwracająca wyrażenie w RPN w stringu
         {
-            Dictionary<string, int> precedence = new Dictionary<string, int>();
-            precedence.Add("+", 1);
-            precedence.Add("-", 1);
-            precedence.Add("/", 2);
-            precedence.Add("*", 2);
+            Dictionary<string, int> precedence = new Dictionary<string, int>
+            {
+                { "+", 1 }, { "-", 1 }, { "/", 2 }, { "*", 2 }
+            };
 
             Stack<string> stack = new Stack<string>();
 
             string result = "";
-            string[] equation = token.Split();
+            string[] equation = token.Split(' ');
 
             foreach (string item in equation)
             {

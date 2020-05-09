@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data.cs" />
+    <Compile Include="DigitDetection.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="Network.cs" />
