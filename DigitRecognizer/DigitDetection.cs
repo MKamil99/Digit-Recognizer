@@ -186,11 +186,11 @@ namespace DigitRecognizer
 
                 
                 double max = output.Max();
-                if (max < 0.6) return $"NIE POTRAFIĘ ROZPOZNAĆ ZNAKU NA {digits.IndexOf(digit) + 1}. MIEJSCU";
+                if (max < 0.5) return $"NIE POTRAFIĘ ROZPOZNAĆ {digits.IndexOf(digit) + 1}. ZNAKU";
 
                 int count = 0; 
-                foreach (double i in output) if (i > 0.6) count++;
-                if (count > 1) return $"NIE POTRAFIĘ ROZPOZNAĆ ZNAKU NA {digits.IndexOf(digit) + 1}. MIEJSCU";
+                foreach (double i in output) if (i > 0.7) count++;
+                if (count > 1) return $"NIE POTRAFIĘ ROZPOZNAĆ {digits.IndexOf(digit) + 1}. ZNAKU";
 
                 string[] signs = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-", "*", "/" };
                 int index = output.IndexOf(max);

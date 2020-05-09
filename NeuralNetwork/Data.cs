@@ -9,34 +9,33 @@ namespace NeuralNetwork
     {
         public static double[][][] PrepareDatasets()
         {
-            double[][] trainImages = new double[6540][];
-            double[][] trainLabels = new double[6540][];
+            string[] filePaths = Directory.GetFiles(@"datasets\", "*.png");
+            double[][] trainImages = new double[12000 + filePaths.Length * 180][];
+            double[][] trainLabels = new double[12000 + filePaths.Length * 180][];
             for (int i = 0; i < trainImages.Length; i++)
                 trainImages[i] = new double[28 * 28];
             for (int i = 0; i < trainLabels.Length; i++)
                 trainLabels[i] = new double[14];
 
-            double[][] testImages = new double[1060][];
-            double[][] testLabels = new double[1060][];
+            double[][] testImages = new double[2000 + filePaths.Length * 20][];
+            double[][] testLabels = new double[2000 + filePaths.Length * 20][];
             for (int i = 0; i < testImages.Length; i++)
                 testImages[i] = new double[28 * 28];
             for (int i = 0; i < testLabels.Length; i++)
                 testLabels[i] = new double[14];
 
-            Console.WriteLine(" Loading data...");
-            LoadMINSTDataset("train-images.idx3-ubyte", "train-labels.idx1-ubyte", trainImages, trainLabels);
-            LoadMINSTDataset("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", testImages, testLabels);
-            LoadOperationsDataset(trainImages, trainLabels, testImages, testLabels);
+            LoadMINSTDataset(@"datasets\train-images.idx3-ubyte", @"datasets\train-labels.idx1-ubyte", trainImages, trainLabels);
+            LoadMINSTDataset(@"datasets\t10k-images.idx3-ubyte", @"datasets\t10k-labels.idx1-ubyte", testImages, testLabels);
+            LoadOperationsDataset(trainImages, trainLabels, testImages, testLabels, filePaths);
             Shuffle(trainImages, trainLabels);
 
             return new double[][][] { trainImages, trainLabels, testImages, testLabels };
         }
 
-        public static void LoadOperationsDataset(double[][] trainImages, double[][] trainLabels, double[][] testImages, double[][] testLabels)
+        public static void LoadOperationsDataset(double[][] trainImages, double[][] trainLabels, double[][] testImages, double[][] testLabels, string[] filePaths)
         {
             int trainImageIndex = 6000, trainLabelsIndex = 6000, testImageIndex = 1000, testLabelsIndex = 1000;
             int tempIndex = 0;
-            string[] filePaths = Directory.GetFiles(@"data\", "*.png");
             List<double[]> digits;
 
             for (int i = 0; i < filePaths.Length; i++)
@@ -100,7 +99,7 @@ namespace NeuralNetwork
             Extensions.ReadBigInt32(brLabels);                  // magic2
             Extensions.ReadBigInt32(brLabels);                  // numLabels
 
-            for (int i = 0; i < numImages / 10; i++)
+            for (int i = 0; i < numImages / 5; i++)             // wystarczy nam 20% bazy MINST
             {
                 for (int j = 0; j < numRows * numCols; j++)
                     Images[i][j] = Convert.ToDouble(brImages.ReadByte());

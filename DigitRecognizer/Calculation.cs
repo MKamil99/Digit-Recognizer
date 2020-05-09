@@ -7,10 +7,10 @@ namespace DigitRecognizer
     {
         public static string Calculate(string equation)
         {
-            if (equation.EndsWith(" - ") || equation.EndsWith(" + ") || equation.EndsWith(" * ") || equation.EndsWith(" / "))
+            if (equation.EndsWith(" - ") || equation.EndsWith(" + ") || equation.EndsWith(" * ") || equation.EndsWith(" / ") || equation.Contains("  "))
                 return "BŁĘDNY ZAPIS!";
-            string result = toRPN(equation); 
-            Stack<string> temp = ConvertToStack(result); 
+            if (equation.Contains(" / 0")) return "NIE MOŻNA DZIELIĆ PRZEZ ZERO!";
+            Stack<string> temp = ConvertToStack(toRPN(equation));
             return " = " + evalRPN(temp).ToString();
         }
 

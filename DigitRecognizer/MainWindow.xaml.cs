@@ -100,7 +100,7 @@ namespace DigitRecognizer
             if (!tmp.Contains("NIE"))
             {
                 string result = Calculation.Calculate(tmp).ToString();
-                if (result == "BŁĘDNY ZAPIS!") MathTextBox.Text = result;
+                if (result == "BŁĘDNY ZAPIS!" || result == "NIE MOŻNA DZIELIĆ PRZEZ ZERO!") MathTextBox.Text = result;
                 else MathTextBox.Text += result;
             }
         }
