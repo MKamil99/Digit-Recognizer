@@ -6,8 +6,8 @@ namespace NeuralNetwork
     {
         static void Main()
         {
-            int MINSTDatasetSizeDivider = 400; // 1 -> 60000+10000; 5 -> 12000+2000; 10 -> 6000+1000; itd.
-            double[][][] datasets = Data.PrepareDatasets(MINSTDatasetSizeDivider);
+            int MNISTDatasetSizeDivider = 400; // 1 -> 60000+10000; 5 -> 12000+2000; 10 -> 6000+1000; itd.
+            double[][][] datasets = Data.PrepareDatasets(MNISTDatasetSizeDivider);
             // datasets[0] - Training Set's Input
             // datasets[1] - Training Set's Expected Output
             // datasets[2] - Testing  Set's Input
