@@ -51,7 +51,8 @@ namespace DigitRecognizer
         #region Przyciski
         private void LaunchNetworkButtonClick(object sender, RoutedEventArgs e)
         {
-            double[][][] datasets = Data.PrepareDatasets();
+            int MINSTDatasetSizeDivider = 10; // 1 -> 60000+10000; 5 -> 12000+2000; 10 -> 6000+1000; itd.
+            double[][][] datasets = Data.PrepareDatasets(MINSTDatasetSizeDivider);
             // datasets[0] - dane wejściowe zbioru treningowego
             // datasets[1] - oczekiwane dane wyjściowe zbioru treningowego
             // datasets[2] - dane wejściowe zbioru walidacyjnego

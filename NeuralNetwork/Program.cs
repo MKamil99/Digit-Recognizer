@@ -4,9 +4,10 @@ namespace NeuralNetwork
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            double[][][] datasets = Data.PrepareDatasets();
+            int MINSTDatasetSizeDivider = 400; // 1 -> 60000+10000; 5 -> 12000+2000; 10 -> 6000+1000; itd.
+            double[][][] datasets = Data.PrepareDatasets(MINSTDatasetSizeDivider);
             // datasets[0] - Training Set's Input
             // datasets[1] - Training Set's Expected Output
             // datasets[2] - Testing  Set's Input

@@ -8,35 +8,35 @@ namespace NeuralNetwork
 {
     class Data
     {
-        public static double[][][] PrepareDatasets()
+        public static double[][][] PrepareDatasets(int MINSTDatasetSizeDivider)
         {
             string[] filePaths = Directory.GetFiles(@"datasets\", "*.png");
-            double[][] trainImages = new double[12000 + filePaths.Length * 180][];
-            double[][] trainLabels = new double[12000 + filePaths.Length * 180][];
+            double[][] trainImages = new double[60000 / MINSTDatasetSizeDivider + filePaths.Length * 180][];
+            double[][] trainLabels = new double[60000 / MINSTDatasetSizeDivider + filePaths.Length * 180][];
             for (int i = 0; i < trainImages.Length; i++)
                 trainImages[i] = new double[28 * 28];
             for (int i = 0; i < trainLabels.Length; i++)
                 trainLabels[i] = new double[14];
 
-            double[][] testImages = new double[2000 + filePaths.Length * 20][];
-            double[][] testLabels = new double[2000 + filePaths.Length * 20][];
+            double[][] testImages = new double[10000 / MINSTDatasetSizeDivider + filePaths.Length * 20][];
+            double[][] testLabels = new double[10000 / MINSTDatasetSizeDivider + filePaths.Length * 20][];
             for (int i = 0; i < testImages.Length; i++)
                 testImages[i] = new double[28 * 28];
             for (int i = 0; i < testLabels.Length; i++)
                 testLabels[i] = new double[14];
 
-            LoadMINSTDataset(@"datasets\train-images.idx3-ubyte", @"datasets\train-labels.idx1-ubyte", trainImages, trainLabels);
-            LoadMINSTDataset(@"datasets\t10k-images.idx3-ubyte", @"datasets\t10k-labels.idx1-ubyte", testImages, testLabels);
-            LoadOperationsDataset(trainImages, trainLabels, testImages, testLabels, filePaths);
+            LoadMINSTDataset(@"datasets\train-images.idx3-ubyte", @"datasets\train-labels.idx1-ubyte", trainImages, trainLabels, MINSTDatasetSizeDivider);
+            LoadMINSTDataset(@"datasets\t10k-images.idx3-ubyte", @"datasets\t10k-labels.idx1-ubyte", testImages, testLabels, MINSTDatasetSizeDivider);
+            LoadOperationsDataset(trainImages, trainLabels, testImages, testLabels, filePaths, MINSTDatasetSizeDivider);
             Shuffle(trainImages, trainLabels);
 
             return new double[][][] { trainImages, trainLabels, testImages, testLabels };
         }
 
-        public static void LoadOperationsDataset(double[][] trainImages, double[][] trainLabels, double[][] testImages, double[][] testLabels, string[] filePaths)
+        public static void LoadOperationsDataset(double[][] trainImages, double[][] trainLabels, double[][] testImages, double[][] testLabels, string[] filePaths, int MINSTDatasetSizeDivider)
         {
-            int trainImageIndex = 6000, trainLabelsIndex = 6000, testImageIndex = 1000, testLabelsIndex = 1000;
-            int tempIndex = 0;
+            int trainImageIndex = 60000 / MINSTDatasetSizeDivider, trainLabelsIndex = 60000 / MINSTDatasetSizeDivider,
+                testImageIndex = 10000 / MINSTDatasetSizeDivider, testLabelsIndex = 10000 / MINSTDatasetSizeDivider, tempIndex = 0;
             List<double[]> digits;
 
             for (int i = 0; i < filePaths.Length; i++)
@@ -135,7 +135,7 @@ namespace NeuralNetwork
             return values;
         }
 
-        public static void LoadMINSTDataset(string imagesName, string labelsName, double[][] Images, double[][] Labels)
+        public static void LoadMINSTDataset(string imagesName, string labelsName, double[][] Images, double[][] Labels, int MINSTDatasetSizeDivider)
         {
             BinaryReader brImages = new BinaryReader(new FileStream(imagesName, FileMode.Open));
             BinaryReader brLabels = new BinaryReader(new FileStream(labelsName, FileMode.Open));
@@ -148,7 +148,7 @@ namespace NeuralNetwork
             Extensions.ReadBigInt32(brLabels);                  // magic2
             Extensions.ReadBigInt32(brLabels);                  // numLabels
 
-            for (int i = 0; i < numImages / 5; i++)             // wystarczy nam 20% bazy MINST
+            for (int i = 0; i < numImages / MINSTDatasetSizeDivider; i++)
             {
                 for (int j = 0; j < numRows * numCols; j++)
                     Images[i][j] = Convert.ToDouble(brImages.ReadByte());
