@@ -35,3 +35,10 @@ C:\Users\mkami\Desktop\Systemy sztucznej inteligencji\Projekt I\SSI_Projekt\Neur
 C:\Users\mkami\Desktop\Systemy sztucznej inteligencji\Projekt I\SSI_Projekt\NeuralNetwork\obj\Debug\NeuralNetwork.csprojAssemblyReference.cache
 C:\Users\mkami\Desktop\Systemy sztucznej inteligencji\Projekt I\SSI_Projekt\NeuralNetwork\obj\Debug\NeuralNetwork.exe
 C:\Users\mkami\Desktop\Systemy sztucznej inteligencji\Projekt I\SSI_Projekt\NeuralNetwork\obj\Debug\NeuralNetwork.pdb
+C:\Users\wojte\OneDrive\Dokumenty\GitHub\SSI_Projekt\NeuralNetwork\bin\Debug\NeuralNetwork.exe.config
+C:\Users\wojte\OneDrive\Dokumenty\GitHub\SSI_Projekt\NeuralNetwork\bin\Debug\NeuralNetwork.exe
+C:\Users\wojte\OneDrive\Dokumenty\GitHub\SSI_Projekt\NeuralNetwork\bin\Debug\NeuralNetwork.pdb
+C:\Users\wojte\OneDrive\Dokumenty\GitHub\SSI_Projekt\NeuralNetwork\obj\Debug\NeuralNetwork.csprojAssemblyReference.cache
+C:\Users\wojte\OneDrive\Dokumenty\GitHub\SSI_Projekt\NeuralNetwork\obj\Debug\NeuralNetwork.csproj.CoreCompileInputs.cache
+C:\Users\wojte\OneDrive\Dokumenty\GitHub\SSI_Projekt\NeuralNetwork\obj\Debug\NeuralNetwork.exe
+C:\Users\wojte\OneDrive\Dokumenty\GitHub\SSI_Projekt\NeuralNetwork\obj\Debug\NeuralNetwork.pdb

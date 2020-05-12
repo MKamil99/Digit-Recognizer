@@ -106,16 +106,21 @@ namespace DigitRecognizer
                 if (width > 0 && height > 0)
                 {
                     Bitmap bmpCrop = bmpImage.Clone(new Rectangle(StartX[i], StartY[i], width, height), bmpImage.PixelFormat);
-                    digits.Add(ResizeImage(TransformToSquare(bmpCrop)));
+                    digits.Add(ResizeImage(TransformToSquare(bmpCrop, btm)));
                 }
             }
             return digits;
         }
 
-        private static Bitmap TransformToSquare(Bitmap bmpCrop)
-        {
+        private static Bitmap TransformToSquare(Bitmap bmpCrop, Bitmap btm)
+        { 
             int height, width;
-            if (bmpCrop.Height > bmpCrop.Width)
+            if(bmpCrop.Height < btm.Height*0.2 && bmpCrop.Width < btm.Height * 0.2) // "*"
+            {
+                height = (int)(bmpCrop.Height * 8);
+                width = (int)(bmpCrop.Height * 8);
+            }
+            else if (bmpCrop.Height > bmpCrop.Width) // "-"
             {
                 height = (int)(bmpCrop.Height * 1.5);
                 width = (int)(bmpCrop.Height * 1.5);

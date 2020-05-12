@@ -34,7 +34,7 @@ namespace DigitRecognizer
             {
                 Line line = new Line
                 {
-                    StrokeThickness = 5,
+                    StrokeThickness = 4,
                     Stroke = SystemColors.WindowTextBrush,
                     X1 = CurrentPoint.X,
                     Y1 = CurrentPoint.Y,
