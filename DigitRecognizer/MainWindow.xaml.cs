@@ -51,23 +51,27 @@ namespace DigitRecognizer
         #region Przyciski
         private void LaunchNetworkButtonClick(object sender, RoutedEventArgs e)
         {
-            int MNISTDatasetSizeDivider = 10; // 1 -> 60000+10000; 5 -> 12000+2000; 10 -> 6000+1000; itd.
-            double[][][] datasets = Data.PrepareDatasets(MNISTDatasetSizeDivider);
-            // datasets[0] - dane wejściowe zbioru treningowego
-            // datasets[1] - oczekiwane dane wyjściowe zbioru treningowego
-            // datasets[2] - dane wejściowe zbioru walidacyjnego
-            // datasets[3] - oczekiwane dane wyjściowe zbioru walidacyjnego
-
-            network = new Network(datasets[0][0].Length, 2, 100, datasets[1][0].Length);
-            string tmp = network.LoadWeights("weights.txt");
-            if (tmp == "SIEĆ JEST GOTOWA. ")
+            try
             {
-                MathTextBox.Text = tmp + network.CalculatePrecision(datasets);
-                LaunchButton.IsEnabled = false;
-                CalculateButton.IsEnabled = true;
-                ClearButton.IsEnabled = true;
+                int MNISTDatasetSizeDivider = 50; // 1 -> 60000+10000; 5 -> 12000+2000; 10 -> 6000+1000; itd.
+                double[][][] datasets = Data.PrepareDatasets(MNISTDatasetSizeDivider);
+                // datasets[0] - dane wejściowe zbioru treningowego
+                // datasets[1] - oczekiwane dane wyjściowe zbioru treningowego
+                // datasets[2] - dane wejściowe zbioru walidacyjnego
+                // datasets[3] - oczekiwane dane wyjściowe zbioru walidacyjnego
+
+                network = new Network(datasets[0][0].Length, 4, 100, datasets[1][0].Length);
+                string tmp = network.LoadWeights("weights.txt");
+                if (tmp == "SIEĆ JEST GOTOWA. ")
+                {
+                    MathTextBox.Text = tmp + network.CalculatePrecision(datasets);
+                    LaunchButton.IsEnabled = false;
+                    CalculateButton.IsEnabled = true;
+                    ClearButton.IsEnabled = true;
+                }
+                else MathTextBox.Text = tmp;
             }
-            else MathTextBox.Text = tmp;
+            catch { MathTextBox.Text = "NIE ZNALEZIONO FOLDERU DATASETS!"; }
         }
 
         private void ClearButtonClick(object sender, RoutedEventArgs e)

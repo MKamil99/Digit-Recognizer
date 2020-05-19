@@ -10,47 +10,82 @@ namespace NeuralNetwork
     {
         public static double[][][] PrepareDatasets(int MNISTDatasetSizeDivider)
         {
-            string[] filePaths = Directory.GetFiles(@"datasets\", "*.png");
-            double[][] trainImages = new double[60000 / MNISTDatasetSizeDivider + filePaths.Length * 180][];
-            double[][] trainLabels = new double[60000 / MNISTDatasetSizeDivider + filePaths.Length * 180][];
+            string[] arithmeticFilePaths = Directory.GetFiles(@"Datasets\", "signs*.png");
+            string[] digitFilePaths      = Directory.GetFiles(@"Datasets\", "digits*.png");
+            double[][] trainImages = new double[60000 / MNISTDatasetSizeDivider + arithmeticFilePaths.Length * 180 + digitFilePaths.Length * 120][];
+            double[][] trainLabels = new double[60000 / MNISTDatasetSizeDivider + arithmeticFilePaths.Length * 180 + digitFilePaths.Length * 120][];
             for (int i = 0; i < trainImages.Length; i++)
                 trainImages[i] = new double[28 * 28];
             for (int i = 0; i < trainLabels.Length; i++)
                 trainLabels[i] = new double[14];
 
-            double[][] testImages = new double[10000 / MNISTDatasetSizeDivider + filePaths.Length * 20][];
-            double[][] testLabels = new double[10000 / MNISTDatasetSizeDivider + filePaths.Length * 20][];
+            double[][] testImages = new double[10000 / MNISTDatasetSizeDivider + arithmeticFilePaths.Length * 20 + digitFilePaths.Length * 30][];
+            double[][] testLabels = new double[10000 / MNISTDatasetSizeDivider + arithmeticFilePaths.Length * 20 + digitFilePaths.Length * 30][];
             for (int i = 0; i < testImages.Length; i++)
                 testImages[i] = new double[28 * 28];
             for (int i = 0; i < testLabels.Length; i++)
                 testLabels[i] = new double[14];
 
-            LoadMNISTDatabase(@"datasets\train-images.idx3-ubyte", @"datasets\train-labels.idx1-ubyte", trainImages, trainLabels, MNISTDatasetSizeDivider);
-            LoadMNISTDatabase(@"datasets\t10k-images.idx3-ubyte", @"datasets\t10k-labels.idx1-ubyte", testImages, testLabels, MNISTDatasetSizeDivider);
-            LoadOperationsDataset(trainImages, trainLabels, testImages, testLabels, filePaths, MNISTDatasetSizeDivider);
+            LoadMNISTDataset(@"datasets\train-images.idx3-ubyte", @"datasets\train-labels.idx1-ubyte", trainImages, trainLabels, MNISTDatasetSizeDivider);
+            LoadMNISTDataset(@"datasets\t10k-images.idx3-ubyte",  @"datasets\t10k-labels.idx1-ubyte", testImages, testLabels, MNISTDatasetSizeDivider);
+            LoadOwnDatasets(trainImages, trainLabels, testImages, testLabels, arithmeticFilePaths, digitFilePaths, MNISTDatasetSizeDivider);
             Shuffle(trainImages, trainLabels);
 
             return new double[][][] { trainImages, trainLabels, testImages, testLabels };
         }
 
-        public static void LoadOperationsDataset(double[][] trainImages, double[][] trainLabels, double[][] testImages, double[][] testLabels, string[] filePaths, int MNISTDatasetSizeDivider)
+        private static void LoadOwnDatasets(double[][] trainImages, double[][] trainLabels,
+            double[][] testImages, double[][] testLabels, string[] arithmeticFilePaths, string[] digitFilePaths, int MNISTDatasetSizeDivider)
         {
-            int trainImageIndex = 60000 / MNISTDatasetSizeDivider, trainLabelsIndex = 60000 / MNISTDatasetSizeDivider,
-                testImageIndex = 10000 / MNISTDatasetSizeDivider, testLabelsIndex = 10000 / MNISTDatasetSizeDivider, tempIndex = 0;
-            List<double[]> digits;
+            int trainIndex = 60000 / MNISTDatasetSizeDivider, testIndex = 10000 / MNISTDatasetSizeDivider;
 
-            for (int i = 0; i < filePaths.Length; i++)
+            // Znaki arytmetyczne:
+            List<double[]> arithmeticSigns; int tempIndex = 0;
+            for (int i = 0; i < arithmeticFilePaths.Length; i++)
             {
-                digits = RemoveSecondDimensions(DigitDetection.DetectDigits(new Bitmap(filePaths[i])));
-                for (int j = 0; j < digits.Count - 20; j++)
+                arithmeticSigns = RemoveSecondDimensions(DigitDetection.DetectDigits(new Bitmap(arithmeticFilePaths[i])));
+                for (int j = 0; j < arithmeticSigns.Count - 20; j++)
                 {
-                    trainImages[trainImageIndex++] = digits[j];
-                    trainLabels[trainLabelsIndex++][(tempIndex++ % 4) + 10] = 1;
+                    trainImages[trainIndex] = arithmeticSigns[j];
+                    for (int k = 0; k < trainImages[trainIndex].Length; k++)
+                        if (trainImages[trainIndex][k] > 0) 
+                            trainImages[trainIndex][k] = 1;
+                    trainLabels[trainIndex][(tempIndex++ % 4) + 10] = 1;
+                    trainIndex++;
                 }
-                for (int j = digits.Count - 20; j < digits.Count; j++) // ostatnie 20 znaków (czyli 10%, bo mamy pliki po 200 znaków) idzie do testowego
+                for (int j = arithmeticSigns.Count - 20; j < arithmeticSigns.Count; j++) // ostatnie 20 znaków (czyli 10%, bo mamy pliki po 200 znaków) idzie do testowego
                 {
-                    testImages[testImageIndex++] = digits[j];
-                    testLabels[testLabelsIndex++][(tempIndex++ % 4) + 10] = 1;
+                    testImages[testIndex] = arithmeticSigns[j];
+                    for (int k = 0; k < testImages[testIndex].Length; k++)
+                        if (testImages[testIndex][k] > 0) 
+                            testImages[testIndex][k] = 1;
+                    testLabels[testIndex][(tempIndex++ % 4) + 10] = 1;
+                    testIndex++;
+                }
+            }
+
+            // Cyfry:
+            List<double[]> digits; tempIndex = 0;
+            for (int i = 0; i < arithmeticFilePaths.Length; i++)
+            {
+                digits = RemoveSecondDimensions(DigitDetection.DetectDigits(new Bitmap(digitFilePaths[i])));
+                for (int j = 0; j < digits.Count - 30; j++)
+                {
+                    trainImages[trainIndex] = digits[j];
+                    for (int k = 0; k < trainImages[trainIndex].Length; k++)
+                        if (trainImages[trainIndex][k] > 0) 
+                            trainImages[trainIndex][k] = 1;
+                    trainLabels[trainIndex][(tempIndex++ + 1) % 10] = 1;
+                    trainIndex++;
+                }
+                for (int j = digits.Count - 30; j < digits.Count; j++) // ostatnie 30 znaków (czyli 20%, bo mamy pliki po 150 znaków) idzie do testowego
+                {
+                    testImages[testIndex] = digits[j];
+                    for (int k = 0; k < testImages[testIndex].Length; k++)
+                        if (testImages[testIndex][k] > 0) 
+                            testImages[testIndex][k] = 1;
+                    testLabels[testIndex][(tempIndex++ + 1) % 10] = 1;
+                    testIndex++;
                 }
             }
         }
@@ -130,12 +165,15 @@ namespace NeuralNetwork
 
             for (int i = 0; i < bitmap.Height; i++)
                 for (int j = 0; j < bitmap.Width; j++)
+                {
                     values[i][j] = 255 - (bitmap.GetPixel(j, i).R + bitmap.GetPixel(j, i).G + bitmap.GetPixel(j, i).B) / 3;
+                    if (values[i][j] > 0) values[i][j] = 1;
+                }
 
             return values;
         }
 
-        public static void LoadMNISTDatabase(string imagesName, string labelsName, double[][] Images, double[][] Labels, int MNISTDatasetSizeDivider)
+        public static void LoadMNISTDataset(string imagesName, string labelsName, double[][] Images, double[][] Labels, int MNISTDatasetSizeDivider)
         {
             BinaryReader brImages = new BinaryReader(new FileStream(imagesName, FileMode.Open));
             BinaryReader brLabels = new BinaryReader(new FileStream(labelsName, FileMode.Open));
@@ -151,7 +189,10 @@ namespace NeuralNetwork
             for (int i = 0; i < numImages / MNISTDatasetSizeDivider; i++)
             {
                 for (int j = 0; j < numRows * numCols; j++)
+                {
                     Images[i][j] = Convert.ToDouble(brImages.ReadByte());
+                    if (Images[i][j] > 0) Images[i][j] = 1;
+                }
 
                 Labels[i][Convert.ToInt32(brLabels.ReadByte())] = 1;
             }

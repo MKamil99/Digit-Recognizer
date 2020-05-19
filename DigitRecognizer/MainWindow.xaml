@@ -19,8 +19,8 @@
             </Canvas.Background>
         </Canvas>
 
-        <TextBlock x:Name="MathTextBox" Text="Tu pojawi się działanie" FontSize="20" Margin="20" Height="30" 
-                   TextAlignment="Center" Grid.Row="1" Background="White"/>
+        <TextBlock x:Name="MathTextBox" Text="WPROWADŹ DZIAŁANIE W STREFIE RYSOWANIA" FontSize="20" 
+                   Margin="20" Height="30" TextAlignment="Center" Grid.Row="1" Background="White"/>
 
         <WrapPanel HorizontalAlignment="Center" Grid.Row="2">
             <Button x:Name="LaunchButton" Click="LaunchNetworkButtonClick" Content="Uruchom sieć neuronową" Width="160" Height="30" Margin="20" Background="White"/>

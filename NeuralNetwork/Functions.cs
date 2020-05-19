@@ -5,7 +5,7 @@ namespace NeuralNetwork
 {
     class Functions
     {
-        public static double Alpha { get; set; } = 0.5;
+        public static double Alpha { get; set; } = 0.8;
 
         public static double CalculateError(List<double> outputs, int row, double[][] expectedresults) // objective function
         {
