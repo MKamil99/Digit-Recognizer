@@ -115,7 +115,7 @@ namespace DigitRecognizer
         private static Bitmap TransformToSquare(Bitmap bmpCrop, Bitmap btm)
         { 
             int height, width;
-            if(bmpCrop.Height < btm.Height*0.2 && bmpCrop.Width < btm.Height * 0.2) // "*"
+            if(bmpCrop.Height < btm.Height*0.15 && bmpCrop.Width < btm.Height * 0.15) // "*"
             {
                 height = (int)(bmpCrop.Height * 8);
                 width = (int)(bmpCrop.Height * 8);
