@@ -66,7 +66,7 @@ namespace DigitRecognizer
 
             StartX.Add(columnsWithBlackPoints[0]);
             for (int i = 1; i < columnsWithBlackPoints.Count - 1; i++)
-                if (columnsWithBlackPoints[i + 1] - columnsWithBlackPoints[i] > 1)
+                if (columnsWithBlackPoints[i + 1] - columnsWithBlackPoints[i] > 3)
                 {
                     StartX.Add(columnsWithBlackPoints[i + 1]);
                     StopX.Add(columnsWithBlackPoints[i]);
