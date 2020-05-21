@@ -9,6 +9,8 @@ namespace DigitRecognizer
         {
             if (equation.EndsWith(" - ") || equation.EndsWith(" + ") || equation.EndsWith(" * ") || equation.EndsWith(" / ") || equation.Contains("  "))
                 return "BŁĘDNY ZAPIS!";
+            if (equation.StartsWith(" - ") || equation.StartsWith(" + ") || equation.StartsWith(" * ") || equation.StartsWith(" / "))
+                return "BŁĘDNY ZAPIS!";
             if (equation.Contains(" / 0")) return "NIE MOŻNA DZIELIĆ PRZEZ ZERO!";
             Stack<string> temp = ConvertToStack(toRPN(equation));
             return " = " + evalRPN(temp).ToString();

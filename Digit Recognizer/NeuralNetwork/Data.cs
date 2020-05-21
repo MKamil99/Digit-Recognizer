@@ -52,8 +52,8 @@ namespace NeuralNetwork
                     trainImages[trainIndex] = arithmeticSigns[j];
                     for (int k = 0; k < trainImages[trainIndex].Length; k++)
                     {
-                        if (trainImages[trainIndex][k] < 10) trainImages[trainIndex][k] = 0;
-                        else trainImages[trainIndex][k] = 1;
+                        //if (trainImages[trainIndex][k] < 10) trainImages[trainIndex][k] = 0;
+                        //else trainImages[trainIndex][k] = 1;
                     }
                     trainLabels[trainIndex][(tempIndex++ % 4) + 10] = 1;
                     trainIndex++;
@@ -63,8 +63,8 @@ namespace NeuralNetwork
                     testImages[testIndex] = arithmeticSigns[j];
                     for (int k = 0; k < testImages[testIndex].Length; k++)
                     {
-                        if (testImages[testIndex][k] < 10) testImages[testIndex][k] = 0;
-                        else testImages[testIndex][k] = 1;
+                        //if (testImages[testIndex][k] < 10) testImages[testIndex][k] = 0;
+                        //else testImages[testIndex][k] = 1;
                     }
                     testLabels[testIndex][(tempIndex++ % 4) + 10] = 1;
                     testIndex++;
@@ -81,8 +81,8 @@ namespace NeuralNetwork
                     trainImages[trainIndex] = digits[j];
                     for (int k = 0; k < trainImages[trainIndex].Length; k++)
                     {
-                        if (trainImages[trainIndex][k] < 10) trainImages[trainIndex][k] = 0;
-                        else trainImages[trainIndex][k] = 1;
+                        //if (trainImages[trainIndex][k] < 10) trainImages[trainIndex][k] = 0;
+                        //else trainImages[trainIndex][k] = 1;
                     }
                     trainLabels[trainIndex][(tempIndex++ + 1) % 10] = 1;
                     trainIndex++;
@@ -92,8 +92,8 @@ namespace NeuralNetwork
                     testImages[testIndex] = digits[j];
                     for (int k = 0; k < testImages[testIndex].Length; k++)
                     {
-                        if (testImages[testIndex][k] < 10) testImages[testIndex][k] = 0;
-                        else testImages[testIndex][k] = 1;
+                        //if (testImages[testIndex][k] < 10) testImages[testIndex][k] = 0;
+                        //else testImages[testIndex][k] = 1;
                     }
                     testLabels[testIndex][(tempIndex++ + 1) % 10] = 1;
                     testIndex++;
@@ -130,7 +130,7 @@ namespace NeuralNetwork
                 for (int j = 0; j < bitmap.Width; j++)
                 {
                     values[i][j] = 255 - (bitmap.GetPixel(j, i).R + bitmap.GetPixel(j, i).G + bitmap.GetPixel(j, i).B) / 3;
-                    if (values[i][j] > 0) values[i][j] = 1;
+                    //if (values[i][j] > 0) values[i][j] = 1;
                 }
 
             return values;
@@ -154,8 +154,8 @@ namespace NeuralNetwork
                 for (int j = 0; j < numRows * numCols; j++)
                 {
                     Images[i][j] = Convert.ToDouble(brImages.ReadByte());
-                    if (Images[i][j] < 10) Images[i][j] = 0;
-                    else Images[i][j] = 1;
+                    //if (Images[i][j] < 10) Images[i][j] = 0;
+                    //else Images[i][j] = 1;
                 }
 
                 Labels[i][Convert.ToInt32(brLabels.ReadByte())] = 1;

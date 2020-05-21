@@ -13,10 +13,10 @@ namespace NeuralNetwork
             // datasets[2] - Testing  Set's Input
             // datasets[3] - Testing  Set's Expected Output
 
-            //Network network = new Network(0.05, 0.5, datasets[0][0].Length, new int[] { 100, 100, 100, 100}, datasets[1][0].Length);
+            //Network network = new Network(0.5, datasets[0][0].Length, new int[] { 100, 100, 100, 100}, datasets[1][0].Length);
             Network network = Network.LoadNetworkFromFile("weights.txt");
             network.CalculatePrecision(datasets);
-            network.Train(datasets, 15, true);
+            network.Train(datasets, 1, true);
             network.CalculatePrecision(datasets);
             //for (int i = 0; i < datasets[2].Length; i++)
             //{

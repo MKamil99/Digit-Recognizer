@@ -8,17 +8,15 @@ namespace NeuralNetwork
 {
     class Network
     {
-        static double LearningRate { get; set; } = 0.05;
         static double SynapsesCount;
         internal List<Layer> Layers;
 
-        public Network(double learningrate, double alpha, int inputneuronscount, int[] hiddenlayerssizes, int outputneuronscount)
+        public Network(double alpha, int inputneuronscount, int[] hiddenlayerssizes, int outputneuronscount)
         {
             if (inputneuronscount < 1 || hiddenlayerssizes.Length < 1 || outputneuronscount < 1)
                 throw new Exception("Incorrect Network Parameters");
 
             Functions.Alpha = alpha;
-            LearningRate = learningrate;
 
             Layers = new List<Layer>();
             AddFirstLayer(inputneuronscount);
@@ -68,10 +66,10 @@ namespace NeuralNetwork
             string[] lines = File.ReadAllLines(path);
             string[] firstLine = lines[0].Split();
             List<int> hiddenLayerSizes = new List<int>();
-            for (int i = 3; i < firstLine.Length - 1; i++)
+            for (int i = 2; i < firstLine.Length - 1; i++)
                 hiddenLayerSizes.Add(Convert.ToInt32(firstLine[i]));
 
-            Network net = new Network(double.Parse(firstLine[0]), double.Parse(firstLine[1]), Convert.ToInt32(firstLine[2]),
+            Network net = new Network(double.Parse(firstLine[0]), Convert.ToInt32(firstLine[1]),
                 hiddenLayerSizes.ToArray(), Convert.ToInt32(firstLine[firstLine.Length - 1]));
 
             if (lines.Length - 1 != SynapsesCount)

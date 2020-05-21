@@ -7,20 +7,19 @@ namespace NeuralNetwork
 {
     class Network
     {
-        static double LearningRate { get; set; } = 0.05;
-        static double SynapsesCount { get; set; }
+        static readonly double LearningRate = 0.05;
+        static double SynapsesCount;
         internal List<Layer> Layers;
         internal double[][] ExpectedResults;
         double[][] ErrorFunctionChanges;
 
-        public Network(double learningrate, double alpha, int inputneuronscount, int[] hiddenlayerssizes, int outputneuronscount)
+        public Network(double alpha, int inputneuronscount, int[] hiddenlayerssizes, int outputneuronscount)
         {
             Console.WriteLine(" Building neural network...");
             if (inputneuronscount < 1 || hiddenlayerssizes.Length < 1 || outputneuronscount < 1)
                 throw new Exception("Incorrect Network Parameters");
 
             Functions.Alpha = alpha;
-            LearningRate = learningrate;
 
             Layers = new List<Layer>();
             AddFirstLayer(inputneuronscount);
@@ -28,7 +27,7 @@ namespace NeuralNetwork
                 AddNextLayer(new Layer(hiddenlayerssizes[i]));
             AddNextLayer(new Layer(outputneuronscount));
 
-            SynapsesCount = Synapse.SynapsesCount;
+            SynapsesCount = CountSynapses();
 
             ErrorFunctionChanges = new double[Layers.Count][];
             for (int i = 1; i < Layers.Count; i++) 
@@ -151,7 +150,7 @@ namespace NeuralNetwork
                     foreach (Synapse synapse in neuron.Inputs)
                         tmp.Add(synapse.Weight.ToString());
 
-            string build = $"{LearningRate.ToString()} {Functions.Alpha.ToString()}";
+            string build = Functions.Alpha.ToString();
             foreach (Layer layer in Layers) build += " " + layer.Neurons.Count.ToString();
             tmp.Insert(0, build);
             File.WriteAllLines(path, tmp);
@@ -162,10 +161,10 @@ namespace NeuralNetwork
             string[] lines = File.ReadAllLines(path);
             string[] firstLine = lines[0].Split();
             List<int> hiddenLayerSizes = new List<int>();
-            for (int i = 3; i < firstLine.Length - 1; i++)
+            for (int i = 2; i < firstLine.Length - 1; i++)
                 hiddenLayerSizes.Add(Convert.ToInt32(firstLine[i]));
 
-            Network net = new Network(double.Parse(firstLine[0]), double.Parse(firstLine[1]), Convert.ToInt32(firstLine[2]),
+            Network net = new Network(double.Parse(firstLine[0]), Convert.ToInt32(firstLine[1]),
                 hiddenLayerSizes.ToArray(), Convert.ToInt32(firstLine[firstLine.Length - 1]));
 
             Console.WriteLine(" Loading weights...");
@@ -209,6 +208,16 @@ namespace NeuralNetwork
             Console.Write($"-> {signs[testingOutputs.ToList().IndexOf(testingOutputs.Max())]}\n Got:       ");
             for (int i = 0; i < trueOutputs.Count; i++) Console.Write(string.Format("{0, 4}", trueOutputs[i].ToString("0.0")) + " ");
             Console.WriteLine($"-> {signs[trueOutputs.ToList().IndexOf(trueOutputs.Max())]}\n");
+        }
+
+        private double CountSynapses()
+        {
+            double count = 0;
+            for (int i = 1; i < Layers.Count; i++)
+                foreach (Neuron neuron in Layers[i].Neurons)
+                    foreach (Synapse synapse in neuron.Inputs)
+                        count++;
+            return count;
         }
     }
 }
