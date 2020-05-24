@@ -4,8 +4,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
 using NeuralNetwork;
+//using System.Diagnostics;
 
 namespace DigitRecognizer
 {
@@ -92,7 +92,7 @@ namespace DigitRecognizer
 
 
 
-        // Dla obliczoncyh przedziałów wycinamy obrazy i wywołujemy funkcję skalującą wycięte obrazy:
+        // Dla obliczonych przedziałów wycinamy obrazy i wywołujemy funkcję skalującą wycięte obrazy:
         private static List<double[][]> VerticalCropping(List<int> StartX, List<int> StopX, List<int> StartY, List<int> StopY, Bitmap btm)
         {
             int width, height;
@@ -168,14 +168,12 @@ namespace DigitRecognizer
             return Data.BitmapToArray(resizedImage);
         }
 
-        // Główna funckja wywołująca sekwencję:
+        // Główna funkcja wywołująca sekwencję:
         public static List<double[][]> DetectDigits(MemoryStream picture)
         {
             Bitmap btm = new Bitmap(picture);
             return IntervalsCounting(ColumnSearch(btm), btm);  // Analiza działania, wycięcie i zapis
         }
-
-        public static List<double[][]> DetectDigits(Bitmap picture) => IntervalsCounting(ColumnSearch(picture), picture);
 
         public static string RecognizeDigits(List<double[]> digits, Network network)
         {
@@ -185,19 +183,11 @@ namespace DigitRecognizer
                 network.PushInputValues(digit);
                 var output = network.GetOutput();
 
-                for (int i = 0; i < output.Count; i++)
-                    Debug.WriteLine(output[i] + " ");
-                Debug.WriteLine("");
-
+                //for (int i = 0; i < output.Count; i++)
+                //    Debug.WriteLine(output[i] + " ");
+                //Debug.WriteLine("");
                 
                 double max = output.Max();
-                // WYŚWIETLANIE INFORMACJI O NIEROZPOZNANYM ZNAKU:
-                //if (max < 0.5) return $"NIE POTRAFIĘ ROZPOZNAĆ {digits.IndexOf(digit) + 1}. ZNAKU";
-
-                //int count = 0; 
-                //foreach (double i in output) if (i > 0.7) count++;
-                //if (count > 1) return $"NIE POTRAFIĘ ROZPOZNAĆ {digits.IndexOf(digit) + 1}. ZNAKU";
-
                 string[] signs = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-", "*", "/" };
                 int index = output.IndexOf(max);
                 if (index >= 10) tmp += " " + signs[index] + " ";

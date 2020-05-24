@@ -44,7 +44,6 @@ namespace NeuralNetwork
             for (int i = 0; i < arithmeticFilePaths.Length; i++)
             {
                 arithmeticSigns = RemoveSecondDimensions(DigitDetection.DetectDigits(new Bitmap(arithmeticFilePaths[i])));
-                //Console.WriteLine(arithmeticFilePaths[i] + ": " + arithmeticSigns.Count);
                 for (int j = 0; j < arithmeticSigns.Count - 20; j++)
                 {
                     trainImages[trainIndex] = arithmeticSigns[j];
@@ -52,10 +51,7 @@ namespace NeuralNetwork
                     {
                         if (trainImages[trainIndex][k] < 10) trainImages[trainIndex][k] = 0;
                         else trainImages[trainIndex][k] = 1;
-                        //Console.Write(trainImages[trainIndex][k] + " ");
-                        //if ((k + 1) % 28 == 0) Console.WriteLine();
                     }
-                    //Console.WriteLine(((tempIndex % 4) + 10) + "\n");
                     trainLabels[trainIndex][(tempIndex++ % 4) + 10] = 1;
                     trainIndex++;
                 }
@@ -66,10 +62,7 @@ namespace NeuralNetwork
                     {
                         if (testImages[testIndex][k] < 10) testImages[testIndex][k] = 0;
                         else testImages[testIndex][k] = 1;
-                        //Console.Write(testImages[testIndex][k] + " ");
-                        //if ((k + 1) % 28 == 0) Console.WriteLine();
                     }
-                    //Console.WriteLine(((tempIndex % 4) + 10) + "\n");
                     testLabels[testIndex][(tempIndex++ % 4) + 10] = 1;
                     testIndex++;
                 }
@@ -80,7 +73,6 @@ namespace NeuralNetwork
             for (int i = 0; i < digitFilePaths.Length; i++)
             {
                 digits = RemoveSecondDimensions(DigitDetection.DetectDigits(new Bitmap(digitFilePaths[i])));
-                //Console.WriteLine(digitFilePaths[i] + ": " + digits.Count);
                 for (int j = 0; j < digits.Count - 30; j++)
                 {
                     trainImages[trainIndex] = digits[j];
@@ -88,10 +80,7 @@ namespace NeuralNetwork
                     {
                         if (trainImages[trainIndex][k] < 10) trainImages[trainIndex][k] = 0;
                         else trainImages[trainIndex][k] = 1;
-                        //Console.Write(trainImages[trainIndex][k] + " ");
-                        //if ((k + 1) % 28 == 0) Console.WriteLine();
                     }
-                    //Console.WriteLine(((tempIndex + 1) % 10) + "\n");
                     trainLabels[trainIndex][(tempIndex++ + 1) % 10] = 1;
                     trainIndex++;
                 }
@@ -102,10 +91,7 @@ namespace NeuralNetwork
                     {
                         if (testImages[testIndex][k] < 10) testImages[testIndex][k] = 0;
                         else testImages[testIndex][k] = 1;
-                        //Console.Write(testImages[testIndex][k] + " ");
-                        //if ((k + 1) % 28 == 0) Console.WriteLine();
                     }
-                    //Console.WriteLine(((tempIndex + 1) % 10) + "\n");
                     testLabels[testIndex][(tempIndex++ + 1) % 10] = 1;
                     testIndex++;
                 }
@@ -164,13 +150,9 @@ namespace NeuralNetwork
                     Images[i][j] = Convert.ToDouble(brImages.ReadByte());
                     if (Images[i][j] < 10) Images[i][j] = 0;
                     else Images[i][j] = 1;
-                    //Console.Write(Images[i][j] + " ");
-                    //if ((j+1) % 28 == 0) Console.WriteLine();
                 }
 
                 Labels[i][Convert.ToInt32(brLabels.ReadByte())] = 1;
-                //Console.WriteLine(Labels[i].ToList().IndexOf(1));
-                //Console.WriteLine("\n");
             }
         }
 

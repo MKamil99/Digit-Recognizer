@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using NeuralNetwork;
-using System.Diagnostics;
+//using System.Diagnostics;
 
 namespace DigitRecognizer
 {
@@ -73,29 +73,24 @@ namespace DigitRecognizer
             var picture = SaveCanvas(PaintSurface);                                     // Zapisuje canvas w pamięci
             var DigitsInTwoDimensions = DigitDetection.DetectDigits(picture);           // Wywołanie kolejnych funckji do wycinania i obróbki wczytanych cyfr, znaków
 
-
-            // DO DEBUGOWANIA - SPRAWDZENIA CZY RESIZING SIĘ ZGADZA ITP.:
-            for (int i = 0; i < DigitsInTwoDimensions.Count; i++) // dla każdej cyfry
-            {
-                for (int j = 0; j < DigitsInTwoDimensions[i].Length; j++) // wiersz
-                {
-                    for (int k = 0; k < DigitsInTwoDimensions[i][j].Length; k++) // kolumna
-                        Debug.Write(DigitsInTwoDimensions[i][j][k] + " ");
-                    Debug.WriteLine("");
-                }
-                Debug.WriteLine("");
-            }
+            //for (int i = 0; i < DigitsInTwoDimensions.Count; i++) // dla każdej cyfry
+            //{
+            //    for (int j = 0; j < DigitsInTwoDimensions[i].Length; j++) // wiersz
+            //    {
+            //        for (int k = 0; k < DigitsInTwoDimensions[i][j].Length; k++) // kolumna
+            //            Debug.Write(DigitsInTwoDimensions[i][j][k] + " ");
+            //        Debug.WriteLine("");
+            //    }
+            //    Debug.WriteLine("");
+            //}
 
             List<double[]> digits = Data.RemoveSecondDimensions(DigitsInTwoDimensions); // Przygotowanie pod karmienie sieci 
 
             string tmp = DigitDetection.RecognizeDigits(digits, network);
             if (tmp != "") MathTextBox.Text = tmp;
-            if (!tmp.Contains("NIE"))
-            {
-                string result = Calculation.Calculate(tmp).ToString();
-                if (result == "BŁĘDNY ZAPIS!" || result == "NIE MOŻNA DZIELIĆ PRZEZ ZERO!") MathTextBox.Text = result;
-                else MathTextBox.Text += result;
-            }
+            string result = Calculation.Calculate(tmp).ToString();
+            if (result == "BŁĘDNY ZAPIS!" || result == "NIE MOŻNA DZIELIĆ PRZEZ ZERO!") MathTextBox.Text = result;
+            else MathTextBox.Text += result;
         }
         #endregion
 

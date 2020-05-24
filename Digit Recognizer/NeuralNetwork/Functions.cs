@@ -16,8 +16,7 @@ namespace NeuralNetwork
             return input;
         }
 
-        public static double BipolarLinearFunction(double input) // funkcja aktywacji: bipolarna liniowa ...
+        public static double BipolarLinearFunction(double input) // funkcja aktywacji: bipolarna liniowa
             => (1 - Math.Pow(Math.E, -Alpha * input)) / (1 + Math.Pow(Math.E, -Alpha * input));
-
     }
 }

@@ -89,7 +89,7 @@ namespace NeuralNetwork
 
 
 
-        // Dla obliczoncyh przedziałów wycinamy obrazy i wywołujemy funkcję skalującą wycięte obrazy:
+        // Dla obliczonych przedziałów wycinamy obrazy i wywołujemy funkcję skalującą wycięte obrazy:
         private static List<double[][]> VerticalCropping(List<int> StartX, List<int> StopX, List<int> StartY, List<int> StopY, Bitmap btm)
         {
             int width, height;
@@ -138,8 +138,6 @@ namespace NeuralNetwork
             return bitmap;
         }
 
-
-
         // Funkcja zmieniająca rozdzielczość na 28x28 i zwracająca bitmapę w postaci tablicy dwuwymiarowej:
         private static double[][] ResizeImage(Image image)
         {
@@ -163,13 +161,6 @@ namespace NeuralNetwork
                 }
             }
             return Data.BitmapToArray(resizedImage);
-        }
-
-        // Główna funckja wywołująca sekwencję:
-        public static List<double[][]> DetectDigits(MemoryStream picture)
-        {
-            Bitmap btm = new Bitmap(picture);
-            return IntervalsCounting(ColumnSearch(btm), btm);  // Analiza działania, wycięcie i zapis
         }
 
         public static List<double[][]> DetectDigits(Bitmap picture) => IntervalsCounting(ColumnSearch(picture), picture);
