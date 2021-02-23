@@ -1,5 +1,5 @@
 # Digit Recognizer
-**Digit Recognizer** is a project written for Machine Learning course on the IV semester of Informatics on Silesian University of Technology.
+**Digit Recognizer** is a project written for the **Artificial Intelligence Systems** course during the 4th semester of Computer Science at the Silesian University of Technology.
 
 ### Table of contents
 * [Project description](#project-description)
