@@ -7,6 +7,7 @@ namespace DigitRecognizer
     {
         public static string Calculate(string equation)
         {
+            if (equation.Length == 0) return "DRAWING FIELD IS EMPTY!";
             if (equation.EndsWith(" - ") || equation.EndsWith(" + ") || equation.EndsWith(" * ") || equation.EndsWith(" / ") || equation.Contains("  "))
                 return "INCORRECT EXPRESSION!";
             if (equation.StartsWith(" - ") || equation.StartsWith(" + ") || equation.StartsWith(" * ") || equation.StartsWith(" / "))

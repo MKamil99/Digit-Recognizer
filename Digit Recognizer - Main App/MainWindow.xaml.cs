@@ -88,7 +88,7 @@ namespace DigitRecognizer
             string tmp = DigitDetection.RecognizeDigits(digits, network);
             if (tmp != "") MathTextBox.Text = tmp;
             string result = Calculation.Calculate(tmp).ToString();
-            if (result == "INCORRECT EXPRESSION!" || result == "YOU CAN'T DIVIDE BY ZERO!") MathTextBox.Text = result;
+            if (result == "INCORRECT EXPRESSION!" || result == "YOU CAN'T DIVIDE BY ZERO!" || result == "DRAWING FIELD IS EMPTY!") MathTextBox.Text = result;
             else MathTextBox.Text += result;
         }
         #endregion
