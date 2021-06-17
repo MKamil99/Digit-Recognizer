@@ -1,6 +1,4 @@
 # Digit Recognizer
-**Digit Recognizer** is a project written for the **Artificial Intelligence Systems** course during the 4th semester of Computer Science at the Silesian University of Technology.
-
 ### Table of contents
 * [Project description](#project-description)
 * [How to use main application](#how-to-use-main-application)
@@ -26,10 +24,10 @@ linear activation function**, other ones are **numbers of neurons on specific la
 of network's neurons**.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/43967269/107963517-916d9980-6fa8-11eb-99ec-aa3d0668d30b.png" alt="DigitRecognizer" width="500">
+  <img src="https://user-images.githubusercontent.com/43967269/122359301-baea0200-cf55-11eb-89f7-1709b3d3bdb5.png" alt="DigitRecognizer">
 </p>
 
-Before you start writing an equation in white field, you need to **launch the network** by clicking on the first button. 
+Before you start writing an equation in white field, you need to **launch the neural network** by clicking on the first button. 
 Then, to **calculate the result** after writing an equation, you need to click the last button. If you want to **clear the field**, 
 you need to click the button which is in the middle. And that's it!
 

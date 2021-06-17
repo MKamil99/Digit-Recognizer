@@ -7,7 +7,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using NeuralNetwork;
-//using System.Diagnostics;
 
 namespace DigitRecognizer
 {
@@ -21,7 +20,7 @@ namespace DigitRecognizer
             InitializeComponent();
         }
 
-        #region Rysowanie
+        #region Drawing
         private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
@@ -48,7 +47,7 @@ namespace DigitRecognizer
         }
         #endregion
 
-        #region Przyciski
+        #region Buttons
         private void LaunchNetworkButtonClick(object sender, RoutedEventArgs e)
         {
             try
@@ -57,39 +56,39 @@ namespace DigitRecognizer
                 LaunchButton.IsEnabled = false;
                 CalculateButton.IsEnabled = true;
                 ClearButton.IsEnabled = true;
-                MathTextBox.Text = "SIEĆ GOTOWA!";
+                MathTextBox.Text = "NETWORK IS READY!";
             }
-            catch { MathTextBox.Text = "NIE ZNALEZIONO PRAWIDŁOWEGO PLIKU Z WAGAMI!"; }
+            catch { MathTextBox.Text = "THE SYSTEM HASN'T FOUND CORRECT FILE WITH WEIGHTS!"; }
         }
 
         private void ClearButtonClick(object sender, RoutedEventArgs e)
         {
             PaintSurface.Children.Clear();
-            MathTextBox.Text = "WPROWADŹ NOWE DZIAŁANIE W STREFIE RYSOWANIA";
+            MathTextBox.Text = "ENTER ANOTHER ARITHMETICAL EXPRESSION";
         }
 
         private void CalculateButtonClick(object sender, RoutedEventArgs e)
         {
-            var picture = SaveCanvas(PaintSurface);                                     // Zapisuje canvas w pamięci
-            var DigitsInTwoDimensions = DigitDetection.DetectDigits(picture);           // Wywołanie kolejnych funckji do wycinania i obróbki wczytanych cyfr, znaków
+            var picture = SaveCanvas(PaintSurface);                                     // Saving canvas in memory
+            var DigitsInTwoDimensions = DigitDetection.DetectDigits(picture);           // Cutting out (and postprocessing) drawn digits and signs
 
-            //for (int i = 0; i < DigitsInTwoDimensions.Count; i++) // dla każdej cyfry
+            //for (int i = 0; i < DigitsInTwoDimensions.Count; i++) // for every digit/sign
             //{
-            //    for (int j = 0; j < DigitsInTwoDimensions[i].Length; j++) // wiersz
+            //    for (int j = 0; j < DigitsInTwoDimensions[i].Length; j++) // row
             //    {
-            //        for (int k = 0; k < DigitsInTwoDimensions[i][j].Length; k++) // kolumna
+            //        for (int k = 0; k < DigitsInTwoDimensions[i][j].Length; k++) // column
             //            Debug.Write(DigitsInTwoDimensions[i][j][k] + " ");
             //        Debug.WriteLine("");
             //    }
             //    Debug.WriteLine("");
             //}
 
-            List<double[]> digits = Data.RemoveSecondDimensions(DigitsInTwoDimensions); // Przygotowanie pod karmienie sieci 
+            List<double[]> digits = Data.RemoveSecondDimensions(DigitsInTwoDimensions); // Preparation before teaching the network
 
             string tmp = DigitDetection.RecognizeDigits(digits, network);
             if (tmp != "") MathTextBox.Text = tmp;
             string result = Calculation.Calculate(tmp).ToString();
-            if (result == "BŁĘDNY ZAPIS!" || result == "NIE MOŻNA DZIELIĆ PRZEZ ZERO!") MathTextBox.Text = result;
+            if (result == "INCORRECT EXPRESSION!" || result == "YOU CAN'T DIVIDE BY ZERO!") MathTextBox.Text = result;
             else MathTextBox.Text += result;
         }
         #endregion

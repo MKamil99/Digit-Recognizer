@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace DigitRecognizer
 {
-    class Calculation //Aby obliczyć RPN: string result = toRPN(dzialanie); Stack<string> temp = ConvertToStack(result); double wynik = evalRPN(temp);
+    class Calculation // To calculate RPN: string result = toRPN(dzialanie); Stack<string> temp = ConvertToStack(result); double wynik = evalRPN(temp);
     {
         public static string Calculate(string equation)
         {
             if (equation.EndsWith(" - ") || equation.EndsWith(" + ") || equation.EndsWith(" * ") || equation.EndsWith(" / ") || equation.Contains("  "))
-                return "BŁĘDNY ZAPIS!";
+                return "INCORRECT EXPRESSION!";
             if (equation.StartsWith(" - ") || equation.StartsWith(" + ") || equation.StartsWith(" * ") || equation.StartsWith(" / "))
-                return "BŁĘDNY ZAPIS!";
-            if (equation.Contains(" / 0")) return "NIE MOŻNA DZIELIĆ PRZEZ ZERO!";
+                return "INCORRECT EXPRESSION!";
+            if (equation.Contains(" / 0")) return "YOU CAN'T DIVIDE BY ZERO!";
             Stack<string> temp = ConvertToStack(toRPN(equation));
             return " = " + evalRPN(temp).ToString();
         }
 
-        public static string toRPN(string token) //metoda zwracająca wyrażenie w RPN w stringu
+        public static string toRPN(string token) // returning RPN expression as string
         {
             Dictionary<string, int> precedence = new Dictionary<string, int>
             {
@@ -52,7 +52,7 @@ namespace DigitRecognizer
             return result;
         }
 
-        public static Stack<string> ConvertToStack(string tokens) //metoda konwertująca string na Stack
+        public static Stack<string> ConvertToStack(string tokens)
         {
             string[] result = tokens.Split();
             Stack<string> stack = new Stack<string>();
@@ -63,7 +63,7 @@ namespace DigitRecognizer
             return stack;
         }
 
-        public static double evalRPN(Stack<string> tokens) //metoda zwracająca wynik wyrażenia w RPN
+        public static double evalRPN(Stack<string> tokens) // calculating value of RPN expression
         { 
             string token = tokens.Pop();
             double firstNumber, secondNumber;

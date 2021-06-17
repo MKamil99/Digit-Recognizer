@@ -7,7 +7,7 @@ namespace NeuralNetwork
     {
         public static double Alpha { get; set; } = 0.8;
 
-        public static double CalculateError(List<double> outputs, int row, double[][] expectedresults) // funkcja błędu
+        public static double CalculateError(List<double> outputs, int row, double[][] expectedresults) // error function: mean-squared error
         {
             double error = 0;
             for (int i = 0; i < outputs.Count; i++)
@@ -16,7 +16,7 @@ namespace NeuralNetwork
         }
 
         public static double InputSumFunction(List<Synapse> Inputs, double bias = 0)
-        // funkcja wejścia: suma iloczynów wag synaps wchodzących i wartości wyjściowych neuronów warstwy poprzedniej
+        // input function: sum of products of input synapses' weights and previous layer's neurons' output values
         {
             double input = 0;
             foreach (Synapse syn in Inputs) 
@@ -25,10 +25,10 @@ namespace NeuralNetwork
             return input;
         }
 
-        public static double BipolarLinearFunction(double input) // funkcja aktywacji: bipolarna liniowa...
+        public static double BipolarLinearFunction(double input) // activation function: bipolar linear...
             => (1 - Math.Pow(Math.E, -Alpha * input)) / (1 + Math.Pow(Math.E, -Alpha * input));
 
-        public static double BipolarDifferential(double input) // ... i jej pochodna
+        public static double BipolarDifferential(double input) // ... and its differential
             => (2 * Alpha * Math.Pow(Math.E, -Alpha * input)) / (Math.Pow(1 + Math.Pow(Math.E, -Alpha * input), 2));
     }
 }

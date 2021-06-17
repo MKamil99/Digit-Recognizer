@@ -39,7 +39,7 @@ namespace NeuralNetwork
         {
             int trainIndex = 60000 / MNISTDatasetSizeDivider, testIndex = 10000 / MNISTDatasetSizeDivider;
 
-            // Znaki arytmetyczne:
+            // Arithmetical files:
             List<double[]> arithmeticSigns; int tempIndex = 0;
             for (int i = 0; i < arithmeticFilePaths.Length; i++)
             {
@@ -55,7 +55,7 @@ namespace NeuralNetwork
                     trainLabels[trainIndex][(tempIndex++ % 4) + 10] = 1;
                     trainIndex++;
                 }
-                for (int j = arithmeticSigns.Count - 20; j < arithmeticSigns.Count; j++) // ostatnie 20 znaków (czyli 10%, bo mamy pliki po 200 znaków) idzie do testowego
+                for (int j = arithmeticSigns.Count - 20; j < arithmeticSigns.Count; j++) // the last 20 signs (which is 10%; files contain 200 signs each) goes to Test Set
                 {
                     testImages[testIndex] = arithmeticSigns[j];
                     for (int k = 0; k < testImages[testIndex].Length; k++)
@@ -68,7 +68,7 @@ namespace NeuralNetwork
                 }
             }
 
-            // Cyfry:
+            // Digits:
             List<double[]> digits; tempIndex = 0;
             for (int i = 0; i < digitFilePaths.Length; i++)
             {
@@ -84,7 +84,7 @@ namespace NeuralNetwork
                     trainLabels[trainIndex][(tempIndex++ + 1) % 10] = 1;
                     trainIndex++;
                 }
-                for (int j = digits.Count - 30; j < digits.Count; j++) // ostatnie 30 znaków (czyli 20%, bo mamy pliki po 150 znaków) idzie do testowego
+                for (int j = digits.Count - 30; j < digits.Count; j++) // the last 30 signs (which is 20%; files contain 150 each) goes to Test Set
                 {
                     testImages[testIndex] = digits[j];
                     for (int k = 0; k < testImages[testIndex].Length; k++)

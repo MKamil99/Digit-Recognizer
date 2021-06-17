@@ -19,14 +19,14 @@
             </Canvas.Background>
         </Canvas>
 
-        <TextBlock x:Name="MathTextBox" Text="WPROWADŹ DZIAŁANIE W STREFIE RYSOWANIA" FontSize="20" 
+        <TextBlock x:Name="MathTextBox" Text="ENTER THE EXPRESSION IN THE DRAWING FIELD" FontSize="20" 
                    Margin="20" Height="30" TextAlignment="Center" Grid.Row="1" Background="White"/>
 
         <WrapPanel HorizontalAlignment="Center" Grid.Row="2">
-            <Button x:Name="LaunchButton" Click="LaunchNetworkButtonClick" Content="Uruchom sieć neuronową" Width="160" Height="30" Margin="20" Background="White"/>
-            <Button x:Name="ClearButton" Click="ClearButtonClick" Content="Wyczyść" Width="150" Height="30" Margin="20" 
+            <Button x:Name="LaunchButton" Click="LaunchNetworkButtonClick" Content="Launch neural network" Width="160" Height="30" Margin="20" Background="White"/>
+            <Button x:Name="ClearButton" Click="ClearButtonClick" Content="Clear" Width="150" Height="30" Margin="20" 
                     IsEnabled="False" Background="White"/>
-            <Button x:Name="CalculateButton" Click="CalculateButtonClick" Content="Oblicz" Width="150" Height="30" Margin="20" 
+            <Button x:Name="CalculateButton" Click="CalculateButtonClick" Content="Calculate" Width="150" Height="30" Margin="20" 
                     IsEnabled="False" Background="White"/>
         </WrapPanel>
 

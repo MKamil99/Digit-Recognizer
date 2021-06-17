@@ -8,7 +8,7 @@ namespace NeuralNetwork
 {
     class DigitDetection
     {
-        // Przeszukuje kolumny w celu znalezienia punktów innych niż białe:
+        // Searching for non-white points among the columns:
         private static List<int> ColumnSearch(Bitmap btm)
         {
             List<int> Cols = new List<int>();
@@ -26,7 +26,7 @@ namespace NeuralNetwork
             return Cols;
         }
 
-        //Przeszukuje przedziały znalezione przez ColumnSearch w poszukiwaniu punktów innych niż białe:
+        // Searching for non-white points among the intervals found by ColumnSearch:
         private static List<int> RowSearch(List<int> StartX, List<int> StopX, Bitmap btm, int digit)
         {
             List<int> Rows = new List<int>();
@@ -42,7 +42,7 @@ namespace NeuralNetwork
                     }
                 }
             
-            if (Rows.Count == 0) //Zabezpieczenie
+            if (Rows.Count == 0)
             {
                 Rows.Add(0);
                 Rows.Add(btm.Height);
@@ -57,7 +57,7 @@ namespace NeuralNetwork
             if (columnsWithBlackPoints.Count == 0)
                 return new List<double[][]>();
 
-            //Przedziały między kolumnami
+            // Intervals between columns:
             List<int> StartX = new List<int>();
             List<int> StopX = new List<int>();
 
@@ -71,13 +71,13 @@ namespace NeuralNetwork
             StopX.Add(columnsWithBlackPoints[columnsWithBlackPoints.Count - 1]);
 
 
-            //Przedziały między wierszami
+            // Interval between rows:
             List<int> StartY = new List<int>();
             List<int> StopY = new List<int>();
-            int digits = StartX.Count; //Tyle znaleziono znaków
+            int digits = StartX.Count; // amount of signs that have benn found
             for (int i = 0; i < digits; i++)
             {
-                List<int> Rows = RowSearch(StartX, StopX, btm, i); //Dla każdego przedziału kolumn z osobna
+                List<int> Rows = RowSearch(StartX, StopX, btm, i); // for every interval separately
                 if (Rows.Count != 0)
                 {
                     StartY.Add(Rows[0]);
@@ -89,7 +89,7 @@ namespace NeuralNetwork
 
 
 
-        // Dla obliczonych przedziałów wycinamy obrazy i wywołujemy funkcję skalującą wycięte obrazy:
+        // Cutting out the images and scaling them (called for every interval):
         private static List<double[][]> VerticalCropping(List<int> StartX, List<int> StopX, List<int> StartY, List<int> StopY, Bitmap btm)
         {
             int width, height;
@@ -138,7 +138,7 @@ namespace NeuralNetwork
             return bitmap;
         }
 
-        // Funkcja zmieniająca rozdzielczość na 28x28 i zwracająca bitmapę w postaci tablicy dwuwymiarowej:
+        // Changing the dimensions of image to 28x28 and returning the bitmap as two-dimensional array:
         private static double[][] ResizeImage(Image image)
         {
             int width = 28, height = 28;

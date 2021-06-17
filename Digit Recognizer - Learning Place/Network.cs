@@ -117,7 +117,7 @@ namespace NeuralNetwork
             return error;
         }
 
-        private void ChangeWeights(List<double> outputs, int row) // z wykorzystaniem algorytmu wstecznej propagacji
+        private void ChangeWeights(List<double> outputs, int row) // with the backpropagation algorithm
         {
             CalculateErrorFunctionChanges(outputs, row);
             for (int k = Layers.Count - 1; k > 0; k--)
@@ -185,7 +185,7 @@ namespace NeuralNetwork
             return net;
         }
 
-        public void CalculatePrecision(double[][][] datasets, bool shownumbers = false) // z użyciem zbioru testowego
+        public void CalculatePrecision(double[][][] datasets, bool shownumbers = false) // with the Test Set
         {
             double[][] testingInputs = datasets[2], testingOutputs = datasets[3];
             List<double> outputs; int correct = 0;
