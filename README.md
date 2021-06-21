@@ -3,11 +3,12 @@
 * [Project description](#project-description)
 * [How to use main application](#how-to-use-main-application)
 * [How to use Learning Place](#how-to-use-learning-place)
+* [Project status](#project-status)
 
 ### Project description
 Project **Digit Recognizer** was made for **recognizing handwritten equations and calculating their results**.
 It consists of two programs. Main application is a window with white field in which user can write natural 
-numbers and basic arithmetical signs (+, -, *, /). Thanks to previously prepared artificial neural network, 
+numbers and basic arithmetical signs (+, -, \*, /). Thanks to previously prepared artificial neural network, 
 the program analyzes user's input and displays result of the equation.
 
 Second program is so-called **Learning Place** which is simply **artificial neural network that waits for learning**. 
@@ -53,3 +54,6 @@ network.CalculatePrecision(datasets);
 network.Train(datasets, 15, true);
 network.CalculatePrecision(datasets);
 ```
+
+### Project status
+The project is considered as **finished**. 
